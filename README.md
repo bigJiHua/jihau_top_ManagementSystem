@@ -1,4 +1,4 @@
-# jihau_top_management_system
+# jihau_top_管理系统
 
 ## Project setup
 ```
@@ -21,4 +21,4 @@ npm run lint
 ```
 
 ### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+See [jihau_top](https://jihau_top).
