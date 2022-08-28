@@ -1,4 +1,4 @@
-# jihau_top_管理系统
+# jihau_top 管理系统
 
 ## Project setup
 ```
