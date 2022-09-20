@@ -1,21 +1,27 @@
-import User from '@/components/Content/UserDataPanel/UserData'
+import Login from '@/components/UserLogin/Login'
+import Panel from '@/components/Content/Panel'
+import UserData from '@/components/Content/UserDataPanel/UserData'
+import UserArticle from '@/components/Content/UserDataPanel/UserArticle'
 
 export default [
   {
     path: '/',
-    component: User
+    component: Login
   },
   {
-    path: '/User',
-    name: 'User',
-    component: User,
-    redirect: '/User/DataPanel',
+    path: '/Login',
+    component: Login
+  },
+  {
+    path: '/Panel',
+    component: Panel,
+    redirect: '/Panel/UserData',
     meta: {
       requireAuth: true
     },
     children: [
-      { path: 'DataPanel', component: User },
-      { path: 'DataPanel1', component: User }
+      { path: 'UserData', component: UserData },
+      { path: 'UserArticle', component: UserArticle }
     ]
   }
 ]

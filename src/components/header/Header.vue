@@ -2,8 +2,8 @@
   <div id="" class="Header">
     <h2>JiHua后台管理系统</h2>
     <p class="Headertime">现在时间：{{ time }}</p>
-    <el-button v-if="!isLogin">登录</el-button>
-    <el-button v-else>退出登录</el-button>
+    <router-link to="/Login" v-if="isLogin"><el-button>登录</el-button></router-link>
+    <el-button v-else @click="outLogin">退出登录</el-button>
   </div>
 </template>
 
@@ -22,7 +22,12 @@ export default {
     }, 1000)
   },
   method () {},
-  methods: {},
+  methods: {
+    outLogin () {
+      localStorage.removeItem('token')
+      this.$router.push('/Login')
+    }
+  },
   watch: {},
   computed: {},
   filters: {},

@@ -1,6 +1,7 @@
 <template>
   <div id="" class="">
-    <h2>用户信息一览表</h2>
+    <h2>用户信息数据</h2>
+
   </div>
 </template>
 

@@ -6,13 +6,13 @@
     >
       <el-submenu index="1">
         <template slot="title">
-          <i class="el-icon-menu"></i>
+          <i class="el-icon-user"></i>
           <span slot="title">用户管理</span>
         </template>
         <el-menu-item-group>
-          <template slot="title">数据</template>
-          <el-menu-item index="1-1"><router-link to="/User">用户文章数据</router-link></el-menu-item>
-          <el-menu-item index="1-2"><router-link to="/User/DataPanel1">用户信息数据</router-link></el-menu-item>
+          <template slot="title">用户数据</template>
+          <router-link to="/Panel/UserData"><el-menu-item index="1-1">用户信息数据</el-menu-item></router-link>
+          <router-link to="/Panel/UserArticle"><el-menu-item index="1-2">用户文章数据</el-menu-item></router-link>
         </el-menu-item-group>
         <el-menu-item-group title="分组2">
           <el-menu-item index="1-3">选项3</el-menu-item>
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.router-link-active{
+.el-menu-item-group a{
   text-decoration: none;
   color: black;
 }

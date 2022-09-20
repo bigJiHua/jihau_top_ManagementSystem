@@ -1,6 +1,6 @@
 <template>
-  <div id="" class="HomeIndex">
-  <h2>主页</h2>
+  <div id="" class="">
+    <h2>用户文章信息数据</h2>
   </div>
 </template>
 
@@ -11,20 +11,18 @@ export default {
     return {}
   },
   created () {
+
   },
   method () {},
   methods: {},
   watch: {},
   computed: {},
   filters: {},
-  name: 'HomeModule',
+  name: 'UserData1',
   components: {
   }
 }
 </script>
 
 <style lang="less" scoped>
-.HomeIndex{
-  display: flex;
-}
 </style>
