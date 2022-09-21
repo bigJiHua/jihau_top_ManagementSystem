@@ -25,6 +25,12 @@ router.beforeEach((to, from, next) => {
     } else {
       next('Login')
     }
+  } else if (address.match(/^\/Login\//)) {
+    if (token) {
+      next('Panel')
+    } else {
+      next()
+    }
   } else {
     next()
   }

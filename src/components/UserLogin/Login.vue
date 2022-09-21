@@ -1,7 +1,7 @@
 <template>
   <div id="" class="Login">
     <div class="LoginBox">
-      <h2>JiHua后台管理面板 --- 管理员登录</h2>
+      <h2>登录</h2>
       <el-form
         :model="ruleForm"
         status-icon
@@ -24,19 +24,10 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="验证码" prop="CheckNum" class="CheckNum">
-          <el-input
-            type="CheckNum"
-            v-model="ruleForm.CheckNum"
-            autocomplete="off"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')"
             >登录</el-button
           >
           <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
       </el-form>
     </div>
   </div>
@@ -64,25 +55,14 @@ export default {
         callback()
       }
     }
-    const validatePass3 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('用户名不能为空'))
-      } else if (value.length < 6) {
-        callback(new Error('用户名长度不能短于6位'))
-      } else {
-        callback()
-      }
-    }
     return {
       ruleForm: {
-        pass: '',
-        username: '',
-        CheckNum: ''
+        pass: 'admin666',
+        username: 'admin666'
       },
       rules: {
         pass: [{ validator: validatePass, trigger: 'blur' }],
-        username: [{ validator: validatePass2, trigger: 'blur' }],
-        CheckNum: [{ validator: validatePass3, trigger: 'blur' }]
+        username: [{ validator: validatePass2, trigger: 'blur' }]
       }
     }
   },
@@ -92,7 +72,13 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.ruleForm)
+          if (localStorage.getItem('token')) {
+            alert('已经登录请勿重复登录')
+            this.$router.push('/Panel')
+          } else {
+            localStorage.setItem('token', valid)
+            this.$router.push('/Panel')
+          }
         } else {
           return false
         }
@@ -131,7 +117,7 @@ export default {
   );
 }
 .LoginBox {
-  width: 50vw;
+  width: 80vw;
   max-height: 60vh;
   overflow: overlay;
   background-color: rgba(240, 240, 240, 0.5);
@@ -151,13 +137,7 @@ export default {
 .LoginBox::-webkit-scrollbar {
   display: none;
 }
-.demo-ruleForm {
-  padding: 0 0 0 75px;
-}
-.el-form-item {
-  width: 35vw;
-}
-.CheckNum{
-  width: 20vw;
+.el-form-item__content{
+  margin: 0;
 }
 </style>
