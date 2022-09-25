@@ -10,30 +10,31 @@
         label-width="100px"
         class="demo-ruleForm"
       >
-        <el-form-item label="用户名" prop="username">
+        <el-form-item label="用户名" label-width="70px"  prop="username">
           <el-input
             type="username"
             v-model="ruleForm.username"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
+        <el-form-item label="密码" label-width="70px" prop="pass">
           <el-input
             type="password"
             v-model="ruleForm.pass"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-          <el-button type="primary" @click="submitForm('ruleForm')"
-            >登录</el-button
-          >
-          <el-button @click="resetForm('ruleForm')">重置</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')" v-if="loading">登录</el-button
+        >
+        <el-button type="primary" :loading="true" v-else>登录中</el-button>
+        <el-button @click="resetForm('ruleForm')">重置</el-button>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
+import PostLogin from '@/API/API/UserLogin/UserLogin'
 export default {
   props: [],
   data () {
@@ -49,35 +50,62 @@ export default {
     const validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('用户名不能为空'))
-      } else if (value.length < 6) {
-        callback(new Error('用户名长度不能短于6位'))
+      } else if (value.length < 3) {
+        callback(new Error('用户名长度不能短于3位'))
       } else {
         callback()
       }
     }
     return {
       ruleForm: {
-        pass: 'admin666',
-        username: 'admin666'
+        username: '1111',
+        pass: '123456'
       },
       rules: {
         pass: [{ validator: validatePass, trigger: 'blur' }],
         username: [{ validator: validatePass2, trigger: 'blur' }]
-      }
+      },
+      loading: true
     }
   },
   created () {},
   method () {},
   methods: {
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           if (localStorage.getItem('token')) {
-            alert('已经登录请勿重复登录')
-            this.$router.push('/Panel')
+            this.$message({
+              showClose: true,
+              message: '已经登录请勿重复登录',
+              type: 'warning'
+            })
+            setTimeout(() => {
+              this.$router.push('/Panel')
+            }, 800)
           } else {
-            localStorage.setItem('token', valid)
-            this.$router.push('/Panel')
+            this.loading = !this.loading
+            const { data: res } = await PostLogin.Login(
+              this.ruleForm.username,
+              this.ruleForm.pass
+            )
+            if (res.status === 200) {
+              this.$notify({
+                title: res.status,
+                message: res.message,
+                type: 'success'
+              })
+              setTimeout(() => {
+                localStorage.setItem('token', res.token)
+                this.$router.push('/Panel')
+                this.loading = !this.loading
+              }, 800)
+            } else {
+              this.$notify.error({
+                title: res.status,
+                message: res.message
+              })
+            }
           }
         } else {
           return false
@@ -100,27 +128,13 @@ export default {
 .Login {
   height: 100vh;
   width: 100vw;
-  background-image: linear-gradient(
-    to right top,
-    #caf8ec,
-    #94e1e2,
-    #5ac7df,
-    #18acdf,
-    #008dd9,
-    #5f80dd,
-    #966dd3,
-    #c254b9,
-    #ff5495,
-    #ff7468,
-    #ffa63c,
-    #f6d92a
-  );
+  background-color: #EBEEF5;
 }
 .LoginBox {
-  width: 80vw;
+  width: 30vw;
   max-height: 60vh;
   overflow: overlay;
-  background-color: rgba(240, 240, 240, 0.5);
+  background-color: #F2F6FC;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -136,8 +150,5 @@ export default {
 }
 .LoginBox::-webkit-scrollbar {
   display: none;
-}
-.el-form-item__content{
-  margin: 0;
 }
 </style>

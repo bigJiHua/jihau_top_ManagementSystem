@@ -15,10 +15,10 @@
             ><el-menu-item index="1-2">用户文章数据</el-menu-item></router-link
           >
         </el-menu-item-group>
-        <el-submenu index="1-4">
+        <el-submenu index="1-3">
           <template slot="title">管理用户</template>
-          <el-menu-item index="1-4-1">普通用户</el-menu-item>
-          <el-menu-item index="1-4-2">管理员</el-menu-item>
+          <router-link to="/Panel/UserAverage"><el-menu-item index="1-3-1">普通用户</el-menu-item></router-link>
+          <router-link to="/Panel/UserAdmin"><el-menu-item index="1-3-2">管理员</el-menu-item></router-link>
         </el-submenu>
       </el-submenu>
       <el-submenu index="2">
@@ -38,7 +38,7 @@
       </el-submenu>
       <el-submenu index="3">
         <template slot="title">
-          <i class="el-icon-menu"></i>
+          <i class="el-icon-folder-opened"></i>
           <span slot="title">文件管理</span>
         </template>
         <el-menu-item-group>
@@ -90,13 +90,7 @@ export default {
 @media only screen and (min-width: 755px) {
   .AsideFrame {
     width: 202px;
-    height: calc(100vh - 100px);
-    background-color: #e9eef3;
-  }
-}
-@media only screen and (max-width: 755px) {
-  .AsideFrame {
-    height: calc(100vh - 100px);
+    height: calc(100vh - 50px);
     background-color: #e9eef3;
   }
 }
