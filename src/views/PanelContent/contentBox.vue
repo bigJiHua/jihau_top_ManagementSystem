@@ -1,5 +1,5 @@
 <template>
-  <h1>JiHua后台管理面板 control Panel</h1>
+  <h1>内容盒子</h1>
 </template>
 
 <script setup lang="ts">
