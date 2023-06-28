@@ -91,11 +91,11 @@ async function login() {
 
 function validata(key: string, value: string) {
   let bool: boolean = true
-  if (!rules[key].rule.test(value)) {
+  if (!rules[key as keyof typeof rules].rule.test(value)) {
     bool = false
     ElNotification({
       title: '警告',
-      message: rules[key].msg,
+      message: rules[key as keyof typeof rules].msg,
       type: 'warning'
     })
     return bool

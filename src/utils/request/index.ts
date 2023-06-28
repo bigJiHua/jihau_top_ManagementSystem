@@ -3,7 +3,7 @@ import { ElNotification } from 'element-plus'
 
 // 创建axios实例
 const request = axios.create({
-  baseURL: 'https://jihau.top/api',
+  baseURL: 'http://127.0.0.1/api',
   timeout: 5000
 })
 
@@ -27,7 +27,7 @@ request.interceptors.response.use(response => {
     })
   } else {
     ElNotification({
-      title: 'Success',
+      title: '成功',
       message: res.message,
       type: 'success',
     })

@@ -18,7 +18,7 @@ import { RouterView } from 'vue-router';
 .MenuHeader {
   width: 100%;
   height: 50px;
-  background-color: red;
+  background-color: rgba(178, 194, 244, 0.445);
 }
 .MenuAside {
   max-height: 90vh;
