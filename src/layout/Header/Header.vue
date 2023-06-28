@@ -11,10 +11,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
+import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 
-const token: Ref<boolean> = ref(localStorage.getItem('token') ? true : false)
+const token =localStorage.getItem('token') ? true : false
 const router = useRouter()
 function outLogin() {
   localStorage.removeItem('token')
