@@ -20,14 +20,16 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(response => {
   const { data: res } = response
   if(res.status!==200) {
-    ElNotification.error({
+    ElNotification({
       title: '错误',
-      message: res.message
+      message: res.message,
+      type: 'Warning',
     })
   } else {
-    ElNotification.success({
-      title: '成功',
-      message: res.message
+    ElNotification({
+      title: 'Success',
+      message: res.message,
+      type: 'success',
     })
   }
   return response
