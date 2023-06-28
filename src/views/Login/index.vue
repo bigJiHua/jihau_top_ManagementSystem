@@ -43,7 +43,7 @@ let msg = ref('正在登录')
 const setTime = 500
 const rules = reactive({
   username: {
-    rule: /^\S{6,12}/,
+    rule: /^(?=(.*[a-zA-Z].*))(?=(.*\d.*))[\w]{6,12}$|^(?=(.*[a-zA-Z].*))(?=(.*_.*))[\w]{6,12}$|^(?=(.*\d.*))(?=(.*_.*))[\w]{6,12}$/,
     msg: '用户名不能为空!且长度为6-12位'
   },
   password: {
