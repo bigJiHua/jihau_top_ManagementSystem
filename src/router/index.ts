@@ -7,7 +7,7 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   const token: boolean = localStorage.getItem('token') ? true : false
-  const interceptionPath : boolean = to.path.match(/^\/controlPanel/)
+  const interceptionPath : boolean = to.path.match(/^\/controlPanel/) ? true : false
   if (interceptionPath) {
     if (token) {
       next()

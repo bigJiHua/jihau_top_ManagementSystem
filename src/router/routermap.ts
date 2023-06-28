@@ -1,5 +1,6 @@
 // 路由表
-export default [
+
+const RouterMap = [
   {
     path: '/',
     name: '',
@@ -23,3 +24,5 @@ export default [
     ]
   }
 ]
+// 导出路由表
+export default RouterMap
