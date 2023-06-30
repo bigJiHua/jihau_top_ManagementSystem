@@ -1,5 +1,5 @@
 <template>
-  <h1>内容盒子</h1>
+  <h1>轮播图</h1>
 </template>
 
 <script setup lang="ts">

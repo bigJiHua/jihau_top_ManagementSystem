@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import RouterMap from '@/router/routermap'
+import RouterMap from '@/router/routerMap'
 // layout 布局
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

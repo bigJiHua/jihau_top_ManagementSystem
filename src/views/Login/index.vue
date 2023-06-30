@@ -40,7 +40,6 @@ const router = useRouter()
 const username = ref('jihua_test')
 const password = ref('123456')
 let msg = ref('正在登录')
-const setTime = 500
 const rules = reactive({
   username: {
     rule: /^(?=(.*[a-zA-Z].*))(?=(.*\d.*))[\w]{6,12}$|^(?=(.*[a-zA-Z].*))(?=(.*_.*))[\w]{6,12}$|^(?=(.*\d.*))(?=(.*_.*))[\w]{6,12}$/,
@@ -65,15 +64,13 @@ async function login() {
           username: username.value,
           password: password.value
         })
-        console.log(res.User.username);
+        const UserData = res.data.Users
         // 判断返回状态码是否成功
         if (res.token) {
           localStorage.setItem('token', res.token)
-          localStorage.setItem('Username', res.User.username)
-          localStorage.setItem('useridentity', res.User.useridentity)
-          setTimeout(() => {
-            router.push('/controlPanel')
-          }, setTime)
+          localStorage.setItem('Username', UserData.username)
+          localStorage.setItem('useridentity', UserData.useridentity)
+          router.push('/controlPanel')
         }
       }
     }
@@ -85,7 +82,7 @@ async function login() {
         type: 'warning'
       })
       router.push('/controlPanel')
-    }, setTime)
+    }, 500)
   }
 }
 

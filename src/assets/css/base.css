@@ -70,3 +70,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.defalut_a_black {
+  color: black
+}
