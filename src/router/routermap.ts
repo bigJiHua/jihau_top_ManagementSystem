@@ -27,6 +27,11 @@ const RouterMap = [
         name: 'ArticleEditor',
         component:  () => import('@/views/ControlPanel/ArticleClass/ArticleEditor.vue')
       },
+      { 
+        path: 'NotifyEditor',
+        name: 'NotifyEditor',
+        component: () => import('@/views/ControlPanel/ArticleClass/NotifyEditor.vue')
+      },
       // 用户管理
       {
         path: 'UserList',

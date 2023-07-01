@@ -24,7 +24,6 @@
     "lib": ["esnext", "dom", "ES6"],
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "allowImportingTsExtensions": true,
     "removeComments": true
   },
   "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts"],

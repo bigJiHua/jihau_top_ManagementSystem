@@ -3,7 +3,7 @@ import { ElNotification } from 'element-plus'
 
 // 创建axios实例
 const request = axios.create({
-  baseURL: 'http://192.168.0.108/api',
+  baseURL: 'http://192.168.0.110/api',
   timeout: 5000
 })
 
