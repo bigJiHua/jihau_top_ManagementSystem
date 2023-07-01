@@ -21,7 +21,7 @@ request.interceptors.response.use(response => {
   const { data: res } = response
   if(res.status!==200) {
     ElNotification({
-      title: '错误',
+      title: 'Warning',
       message: res.message,
       type: 'Warning',
     })
