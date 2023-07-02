@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { ElNotification } from 'element-plus'
+import { showNotification } from '@/utils/components/RequestCode'
+
 
 // 创建axios实例
 const request = axios.create({
@@ -19,14 +20,15 @@ request.interceptors.request.use(config => {
 // axios响应式拦截器
 request.interceptors.response.use(response => {
   const { data: res } = response
-  if(res.status!==200) {
-    ElNotification({
-      title: 'Warning',
+  if (res.status !== 200) {
+    // 在需要显示通知的地方调用函数
+    showNotification({
+      title: '错误',
       message: res.message,
-      type: 'Warning',
+      type: 'warning',
     })
   } else {
-    ElNotification({
+    showNotification({
       title: '成功',
       message: res.message,
       type: 'success',
@@ -34,8 +36,8 @@ request.interceptors.response.use(response => {
   }
   return response
 }, error => {
-    return Promise.reject(error)
-  })
+  return Promise.reject(error)
+})
 
 
 export default request
