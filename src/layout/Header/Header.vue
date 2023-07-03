@@ -1,6 +1,7 @@
 <template>
   <div class="HeaderBox">
     <h1>JiHua后台管理面板 control Panel</h1>
+    <h3>{{ $route.name }}</h3>
     <div>
       <el-button v-if="token" color="#626aef" @click="outLogin">退出登录</el-button>
       <RouterLink :to="{ path: '/Login' }" v-else>
@@ -14,7 +15,7 @@
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 
-const token =localStorage.getItem('token') ? true : false
+const token = localStorage.getItem('token') ? true : false
 const router = useRouter()
 function outLogin() {
   localStorage.removeItem('token')
@@ -29,6 +30,5 @@ function outLogin() {
   flex-wrap: nowrap;
   justify-content: space-between;
   align-items: center;
-  padding: 5px;
 }
 </style>

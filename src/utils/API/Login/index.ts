@@ -1,4 +1,4 @@
-import request from '../request'
+import request from '@/utils/request'
 // 用户登录
 const LoginMenu = function (userData: { username: string; password: string }) {
   const params = new URLSearchParams()

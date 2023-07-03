@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header class="MenuHeader"><Header></Header></el-header>
-    <el-container>
+    <el-container class="MenuArea">
       <el-aside width="200px" class="MenuAside"><AsideBar></AsideBar></el-aside>
       <el-main class="MenuContenArea"><RouterView></RouterView></el-main>
     </el-container>
@@ -17,8 +17,11 @@ import { RouterView } from 'vue-router';
 <style lang="less" scoped>
 .MenuHeader {
   width: 100%;
-  height: 50px;
+  height: 40px;
   background-color: rgba(178, 194, 244, 0.445);
+}
+.MenuArea {
+  height: calc(100vh - 40px);
 }
 .MenuAside {
   max-height: 90vh;
@@ -30,6 +33,6 @@ import { RouterView } from 'vue-router';
 }
 .MenuContenArea {
   background-color: blueviolet;
-  padding: 10px;
+  padding: 0 5px;
 }
 </style>

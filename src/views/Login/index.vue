@@ -35,11 +35,13 @@ import PostLogin from '@/utils/API/Login'
 import { ElNotification } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+import useLocalStorage from '@/Hooks/useLocalStorage'
+import { useTokenStore } from '@/stores/getToken'
+const TokenStore = useTokenStore()
 const router = useRouter()
 
 const username = ref('jihua_test')
 const password = ref('123456')
-let msg = ref('正在登录')
 const rules = reactive({
   username: {
     rule: /^(?=(.*[a-zA-Z].*))(?=(.*\d.*))[\w]{6,12}$|^(?=(.*[a-zA-Z].*))(?=(.*_.*))[\w]{6,12}$|^(?=(.*\d.*))(?=(.*_.*))[\w]{6,12}$/,
@@ -50,8 +52,7 @@ const rules = reactive({
     msg: '密码不能为空!且长度为6-12位'
   }
 })
-const islogin = localStorage.getItem('token') === null
-
+const islogin = !TokenStore.isToken
 async function login() {
   // 验证是否已经拥有token
   if (!localStorage.getItem('token')) {
@@ -67,9 +68,9 @@ async function login() {
         const UserData = res.data.Users
         // 判断返回状态码是否成功
         if (res.token) {
-          localStorage.setItem('token', res.token)
-          localStorage.setItem('Username', UserData.username)
-          localStorage.setItem('useridentity', UserData.useridentity)
+          useLocalStorage.setLoc('token', res.token, false)
+          useLocalStorage.setLoc('Username', UserData.username, false)
+          useLocalStorage.setLoc('useridentity', UserData.useridentity, false)
           router.push('/controlPanel')
         }
       }

@@ -74,3 +74,7 @@ body {
 .defalut_a_black {
   color: black
 }
+.PageTitle {
+  font-size: 1.5rem;
+  padding: 3px 0;
+}

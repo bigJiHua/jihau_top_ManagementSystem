@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { showNotification } from '@/utils/components/RequestCode'
+import useLocalStorage from '@/Hooks/useLocalStorage'
 
 
 // 创建axios实例
@@ -10,9 +11,8 @@ const request = axios.create({
 
 // axios请求拦截器
 request.interceptors.request.use(config => {
-  // 在发送请求之前做些什么
-  if (localStorage.getItem('token')) {
-    config.headers.Authorization = localStorage.getItem('token')
+  if (useLocalStorage.getLoc('token', false)) {
+    config.headers.Authorization = useLocalStorage.getLoc('token', false)
   }
   return config
 }, error => Promise.reject(error))
