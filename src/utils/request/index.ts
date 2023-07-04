@@ -1,6 +1,8 @@
 import axios from 'axios'
-import { showNotification } from '@/utils/components/RequestCode'
 import useLocalStorage from '@/Hooks/useLocalStorage'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+import { ElNotification } from 'element-plus'
 
 
 // 创建axios实例
@@ -15,20 +17,27 @@ request.interceptors.request.use(config => {
     config.headers.Authorization = useLocalStorage.getLoc('token', false)
   }
   return config
-}, error => Promise.reject(error))
+}, error => {
+  ElNotification({
+    title: '错误',
+    message: error.message,
+    type: 'error',
+  })
+  return Promise.reject(error)
+})
 
 // axios响应式拦截器
 request.interceptors.response.use(response => {
   const { data: res } = response
   if (res.status !== 200) {
     // 在需要显示通知的地方调用函数
-    showNotification({
+    ElNotification({
       title: '错误',
       message: res.message,
       type: 'warning',
     })
   } else {
-    showNotification({
+    ElNotification({
       title: '成功',
       message: res.message,
       type: 'success',
@@ -36,6 +45,17 @@ request.interceptors.response.use(response => {
   }
   return response
 }, error => {
+  const errorCode: number = error.response.status
+  // 在需要显示通知的地方调用函数
+  ElNotification({
+    title: '错误',
+    message: error.message,
+    type: 'error',
+  })
+  if (errorCode === 401) {
+    localStorage.removeItem('token')
+    router.push('/')
+  }
   return Promise.reject(error)
 })
 

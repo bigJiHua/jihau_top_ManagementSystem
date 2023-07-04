@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RouterMap from '@/router/routerMap'
-import { showNotification } from '@/utils/components/RequestCode'
+import { ElNotification } from 'element-plus'
 // layout 布局
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,7 +13,7 @@ router.beforeEach((to, from, next) => {
     if (token) {
       next()
     } else {
-      showNotification({
+      ElNotification({
         title: '错误',
         message: '未登录 禁止操作！',
         type: 'warning',

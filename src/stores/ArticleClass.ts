@@ -9,7 +9,7 @@ export const useArticleDataStore = defineStore('ADstore', {
   // 写
   actions: {
     increment(data: any) {
-      this.ArticleListData = [...this.ArticleListData, ...data]
+      this.ArticleListData = data
     },
     intotalNum(Num: number) {
       this.totalNum = Num

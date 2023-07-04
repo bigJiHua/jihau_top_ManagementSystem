@@ -3,6 +3,13 @@ import request from '@/utils/request'
 const GetArticleList = function (Num: number) {
   return request.post('/Ctrl/allarticle?Num=' + Num)
 }
+// 获取文章内容
+const getArchives = function (articleId: string) {
+  const params = new URLSearchParams()
+  params.append('id', articleId)
+  return request.get('/archives/', { params })
+}
 export default {
-  GetArticleList
+  GetArticleList,
+  getArchives
 }

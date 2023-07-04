@@ -20,16 +20,16 @@ const RouterMap = [
       // 文章管理
       {
         path: 'ArticleList',
-        name: 'ArticleList',
+        name: '文章列表',
         component:  () => import('@/views/ControlPanel/ArticleClass/ArticleList.vue')
       },{
         path: 'ArticleEditor',
-        name: 'ArticleEditor',
+        name: '文章编辑',
         component:  () => import('@/views/ControlPanel/ArticleClass/ArticleEditor.vue')
       },
       { 
         path: 'NotifyEditor',
-        name: 'NotifyEditor',
+        name: '通知编辑',
         component: () => import('@/views/ControlPanel/ArticleClass/NotifyEditor.vue')
       },
       // 用户管理

@@ -4,7 +4,8 @@
       style="width: 100%; height: calc(100% - 50px); overflow-x: auto;" stripe>
       <el-table-column fixed prop="article_id" label="文章ID" width="70">
         <template v-slot="scope">
-          <a :href="`https://jihau.top/article/` + scope.row.article_id" target="_blank" class="defalut_a_black">
+          <a :href="`https://jihau.top/article/` + scope.row.article_id" target="_blank"
+            class="defalut_a_black articleId">
             {{ scope.row.article_id }}
           </a>
         </template>
@@ -17,7 +18,8 @@
       </el-table-column>
       <el-table-column prop="cover_img" label="文章首页配图" width="100">
         <template v-slot="scope">
-          <img :src="scope.row.cover_img" alt="文章配图" class="Limit-Img">
+          <img v-if="scope.row.cover_img" :src="scope.row.cover_img" alt="文章配图" class="Limit-Img">
+          <span v-else>无文章配图</span>
         </template>
       </el-table-column>
       <el-table-column prop="keyword" label="关键词" width="150" />
@@ -42,7 +44,8 @@
         @next-click="nextNum" />
     </div>
   </div>
-  <ArticleDetailPanel v-if="isDetail"></ArticleDetailPanel>
+  <ArticleDetailPanel v-if="isDetail" @closePanel="closePanel" :ArticleId="ArticleId" :isTrue="isTrue">
+  </ArticleDetailPanel>
 </template>
 
 <script setup lang="ts">
@@ -50,13 +53,16 @@
 import { ref, reactive, onMounted, watch, computed } from "vue";
 import ArticleRequest from "@/utils/API/ArticleClass"
 import { useArticleDataStore } from '@/stores/ArticleClass'
+import { useRouter } from "vue-router"
 import ArticleDetailPanel from '@/components/ArticleClass/ArticleDetailPanel.vue'
 // 数据定义 
 const store = useArticleDataStore()
 let ArticleData = reactive({ data: store.getStoreArticleListData })
+let router = useRouter()
 let isDetail = ref(false)
-let isEditor = ref(false)
 let total = ref(store.getTotalNum)
+let ArticleId: string = ''
+let isTrue: boolean = false
 // 方法
 async function GetArticleListData(GetNum: number) {
   const { data: res } = await ArticleRequest.GetArticleList(GetNum)
@@ -64,10 +70,15 @@ async function GetArticleListData(GetNum: number) {
   store.intotalNum(res.totalNum)
 }
 const ArticleDetail = (article_id: string) => {
-  isDetail.value = !isDetail.value
+  isDetail.value = true
+  ArticleId = article_id
+  isTrue = true
+}
+const closePanel = () => {
+  isDetail.value = false
 }
 const ArticleEdit = (article_id: string) => {
-  isEditor.value = !isEditor.value
+  router.push('/controlPanel/ArticleEditor/' + article_id)
 }
 function isSameData(data1: any[], data2: any[]) {
   return JSON.stringify(data1) === JSON.stringify(data2);
@@ -138,4 +149,12 @@ const CountDeleteCode = computed(() => {
   align-items: center;
   padding: 5px;
 }
-</style>
+
+/deep/.el-table__cell {
+  text-align: center;
+}
+
+.articleId {
+  color: black;
+  font-weight: 600;
+}</style>

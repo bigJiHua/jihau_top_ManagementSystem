@@ -2,6 +2,13 @@ import CryptoJS from 'crypto-js'
 
 const Secret: string = 'secret key 123'
 
+// 随机加密 randomKey 推荐采取token; data 加密的数据
+const getRandomSubstring = (randomKey: string, data: string) => {
+  const startIndex = Math.floor(Math.random() * (randomKey.length - 11));
+  const randomSecret = randomKey.substr(startIndex, 10)
+  return CryptoJS.AES.encrypt(JSON.stringify(data), randomSecret).toString()
+}
+
 // 封装数据加密方法
 function encryptData(data: any) {
   return CryptoJS.AES.encrypt(JSON.stringify(data), Secret).toString()
@@ -30,5 +37,6 @@ export default {
   encryptData,
   decryptData, 
   getLoc, 
-  setLoc
+  setLoc,
+  getRandomSubstring
 }
