@@ -40,12 +40,12 @@ import { useTokenStore } from '@/stores/getToken'
 const TokenStore = useTokenStore()
 const router = useRouter()
 
-const username = ref('jihua_test')
+const username = ref('JiHua_test')
 const password = ref('123456')
 const rules = reactive({
   username: {
-    rule: /^(?=(.*[a-zA-Z].*))(?=(.*\d.*))[\w]{6,12}$|^(?=(.*[a-zA-Z].*))(?=(.*_.*))[\w]{6,12}$|^(?=(.*\d.*))(?=(.*_.*))[\w]{6,12}$/,
-    msg: '用户名不能为空!且长度为6-12位'
+    rule: /^(?=(.*[a-zA-Z].*))(?=(.*\d.*))[\w]{5,12}$|^(?=(.*[a-zA-Z].*))(?=(.*_.*))[\w]{5,12}$|^(?=(.*\d.*))(?=(.*_.*))[\w]{5,12}$|[a-zA-Z]{5,12}$/,
+    msg: '用户名不能为空!且长度为5-12位'
   },
   password: {
     rule: /^\S{6,12}/,

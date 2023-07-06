@@ -4,7 +4,7 @@ const LoginMenu = function (userData: { username: string; password: string }) {
   const params = new URLSearchParams()
   params.append('username', userData.username)
   params.append('password', userData.password)
-  return request.post('/my/login', params)
+  return request.post('/my/Ctrllogin', params)
 }
 export default {
   LoginMenu

@@ -30,12 +30,15 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(response => {
   const { data: res } = response
   if (res.status !== 200) {
-    // 在需要显示通知的地方调用函数
     ElNotification({
       title: '错误',
       message: res.message,
       type: 'warning',
     })
+    if (res.status === 401 || res.status === 404) {
+      localStorage.removeItem('token')
+      router.push('/')
+    }
   } else {
     ElNotification({
       title: '成功',
@@ -49,7 +52,7 @@ request.interceptors.response.use(response => {
   // 在需要显示通知的地方调用函数
   ElNotification({
     title: '错误',
-    message: error.message,
+    message: error.response.data.message,
     type: 'error',
   })
   if (errorCode === 401) {
