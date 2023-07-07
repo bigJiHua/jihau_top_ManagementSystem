@@ -10,52 +10,30 @@
         </el-button>
       </div>
       <div class="ArticleShowArea">
-        <!-- 左侧内容阅览区 -->
-        <div class="ArticleShowAreaBox">
-          <!-- 内容渲染区 -->
-          <div class="content">
-            <p v-html="ArticleData.data.article.content" v-highlight></p>
-          </div>
-          <!-- 留言区 -->
-          <div class="commentArea">
-            <p>留言</p>
-            <div class="comment" v-for="(item, index) in ArticleData.data.comment" :key="index">
-              <p class="comment_user">
-                {{ item.username }}
-                用户 留言：
-              </p>
-              <p class="comment_text">{{ item.comment }}</p>
-              <p class="comment_time">时间:{{ item.pub_date }}</p>
-              <el-button v-show="isDeleteCommentBtn" type="danger" circle
-                @click.stop="deleteComment(item.username, item.id)" class="deleteCommentBtn">
-                <el-icon class="closeBtn">
-                  <CloseBold />
-                </el-icon>
-              </el-button>
-            </div>
+        <div class="content">
+          <p v-html="ArticleData.data.article.content" v-highlight></p>
+        </div>
+        <div class="commentArea">
+          <p>留言</p>
+          <div class="comment" v-for="(item, index) in ArticleData.data.comment" :key="index">
+            <p class="comment_user">
+              {{ item.username }}
+              用户 留言：
+            </p>
+            <p class="comment_text">{{ item.comment }}</p>
+            <p class="comment_time">时间:{{ item.pub_date }}</p>
           </div>
         </div>
-        <!-- 右侧工具面板 -->
         <div class="ActionToolArea">
-          <h3> 标题： <span class="TipText">{{ ArticleData.data.article.title }} </span></h3>
-          <h3> 关键词： <span class="TipText">{{ ArticleData.data.article.keyword }} </span></h3>
-          <h3> 标签： <span class="TipText">{{ ArticleData.data.article.lable }} </span></h3>
-          <h3> 阅读数： <span class="TipText">{{ ArticleData.data.article.read_num }}</span></h3>
-          <h3> 发布日期：<span class="TipText">{{ ArticleData.data.article.pub_date }}</span></h3>
-          <h3> 作者： <span class="TipText">{{ ArticleData.data.article.username }}</span></h3>
-          <el-row class="ActionBox">
-            <el-button type="primary" plain @click="ShowDeleteBtn">删除评论</el-button>
-            <el-dropdown split-button type="warning" @command="selectAction">
-              修改状态
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item command="reject">驳回文章</el-dropdown-item>
-                  <el-dropdown-item command="restore">恢复正常</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-            <el-button type="danger" plain @click="deleteArticle(ArticleData.data.article.article_id)">删除文章</el-button>
-          </el-row>
+          <h3> 标题：{{ ArticleData.data.article.title }}</h3>
+          <h3> 关键词：{{ ArticleData.data.article.keyword }}</h3>
+          <h3> 标签：{{ ArticleData.data.article.lable }}</h3>
+          <h3> 阅读数：{{ ArticleData.data.article.read_num }}</h3>
+          <h3> 发布日期：{{ ArticleData.data.article.pub_date }}</h3>
+          <h3> 作者：{{ ArticleData.data.article.username }}</h3>
+          删除评论
+          删除文章
+          修改状态
         </div>
       </div>
     </div>
@@ -64,15 +42,16 @@
 
 <script setup lang="ts">
 import ArticleRequest from "@/utils/API/ArticleClass"
-import useELTips from '@/Hooks/ElMessageBoxTips'
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive } from "vue";
+import { useRouter } from "vue-router";
 // 申明对父组件操作
 const emit = defineEmits(['closePanel'])
+const route = useRouter();
 const props = defineProps<{
-  ArticleId: string,
+  ArticleId: String,
   isTrue: boolean
 }>();
-let isDeleteCommentBtn = ref(false)
+
 const ArticleData = reactive({
   data: {
     article: {},
@@ -80,56 +59,14 @@ const ArticleData = reactive({
     goodnum: 0,
     collect: 0
   }
-})
-// 复用传递参数
-class PutDataClass {
-  cagUserName: string = ''
-  articleId: string = ''
-  func: string = ''
-}
+});
 
-// 关闭组件 物理操作
 function close() {
   emit('closePanel')
 }
-function ShowDeleteBtn() {
-  isDeleteCommentBtn.value = !isDeleteCommentBtn.value
-}
-// 获取文章
 const getArticle = async () => {
   const { data: res } = await ArticleRequest.getArchives(String(props.ArticleId))
   ArticleData.data = res.data
-}
-// 删除留言
-const deleteComment = async (username: string, commentId: number | string) => {
-  if (await useELTips.WarningTips('删除这条评论')) {
-    const delCommentPutData = new PutDataClass();
-    delCommentPutData.cagUserName = username
-    delCommentPutData.articleId = String(commentId)
-    delCommentPutData.func = 'delComment'
-    const { data: res } = await ArticleRequest.cagUPData(delCommentPutData)
-    if (res.status === 200) {
-      getArticle()
-    }
-  }
-}
-// 选择文章状态并改变
-const selectAction = async (selectValue: string) => {
-  if (await useELTips.WarningTips('改变文章状态')) {
-    const selectActionPutData = new PutDataClass();
-    selectActionPutData.cagUserName = ArticleData.data.article.username
-    selectActionPutData.articleId = props.ArticleId
-    selectActionPutData.func = selectValue
-    await ArticleRequest.cagUPData(selectActionPutData)
-  }
-}
-// 删除该文章
-const deleteArticle = async (articleId: string | number) => {
-  const delArticlePutData = new PutDataClass();
-  delArticlePutData.cagUserName = ArticleData.data.article.username
-  delArticlePutData.articleId = String(articleId)
-  delArticlePutData.func = 'delArticle'
-  await ArticleRequest.cagUPData(delArticlePutData)
 }
 
 onMounted(() => {
@@ -170,54 +107,24 @@ onMounted(() => {
   background-color: rgb(254, 254, 254);
   z-index: 999;
   border-radius: 5px;
+  z-index: 999;
   overflow: hidden;
 }
 
 .ArticleShowArea {
   width: 100%;
   height: 100%;
+  overflow: scroll;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: flex-start;
   flex-wrap: wrap;
-  padding-bottom: 50px;
-}
-
-.ArticleShowAreaBox {
-  width: 50%;
-  overflow-y: scroll;
-  height: 100%;
 }
 
 .ArticleShowArea::-webkit-scrollbar {
   display: none;
 }
-
-.content {
-  padding: 5px;
-}
-
-.ActionToolArea {
-  width: calc(50% - 20px);
-  padding: 10px;
-  background-color: rgba(200, 221, 249, 0.371);
-  border-radius: 5px;
-
-  .TipText {
-    font-size: 0.8rem;
-  }
-
-  .ActionBox {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-
 
 .BoxHeader {
   width: 100%;
@@ -233,7 +140,16 @@ onMounted(() => {
   font-size: 1.2rem;
 }
 
+.content {
+  padding: 5px;
+  overflow-x: scroll;
+}
+.ActionToolArea {
+  max-width: 100%;
+  padding: 5px;
+}
 .commentArea {
+  max-width: 50%;
   margin-top: 20px;
   padding: 10px 20px 20px 20px;
   border-radius: 5px;
@@ -258,7 +174,6 @@ onMounted(() => {
     border-radius: 4px;
     padding: 5px;
     margin-bottom: 10px;
-    position: relative;
 
     p {
       margin: 0;
@@ -283,12 +198,6 @@ onMounted(() => {
       font-size: 0.5rem;
       text-align: right;
     }
-  }
-
-  .deleteCommentBtn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
   }
 }
 </style>
