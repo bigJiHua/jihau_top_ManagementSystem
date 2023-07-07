@@ -27,11 +27,11 @@
       <el-table-column prop="read_num" label="浏览次数" width="70" />
       <el-table-column prop="pub_date" label="发布日期" width="90" />
       <el-table-column prop="username" label="作者" width="60" />
-      <el-table-column label="状态" width="100">
-        <template v-slot:default="scope">
-          <div>{{ CountDeleteCode(scope.row.is_delete, scope.row.state) }}</div>
+      <el-table-column prop="is_delete" label="状态" width="100">
+        <template v-slot="scope">
+          <div class="Limit-content">{{ CountDeleteCode(scope.row.is_delete) }}</div>
         </template>
-      </el-table-column>      
+      </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="scope">
           <el-button link type="primary" size="small" @click="ArticleDetail(scope.row.article_id)">详细</el-button>
@@ -115,8 +115,8 @@ watch(
   }
 );
 const CountDeleteCode = computed(() => {
-  return (state: string, is_delete: string) => {
-    return parseInt(state) + parseInt(is_delete) === 0 ? '已发布正常' : '已删除/驳回'
+  return (state: string) => {
+    return parseInt(state) === 0 ? '已发布正常' : '已删除'
   }
 })
 </script>
@@ -157,5 +157,4 @@ const CountDeleteCode = computed(() => {
 .articleId {
   color: black;
   font-weight: 600;
-}
-</style>
+}</style>
