@@ -26,6 +26,6 @@
     "allowSyntheticDefaultImports": true,
     "removeComments": true
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts","ckeditor5-jihua.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts"],
   "exclude": ["node_modules"]
 }
