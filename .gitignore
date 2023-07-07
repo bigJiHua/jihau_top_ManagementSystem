@@ -17,7 +17,7 @@ coverage
 /cypress/videos/
 /cypress/screenshots/
 /public/ckeditor5-38.1.0-l2w6bksvktrg
-/src/assets/ckeditor5
+# /src/assets/ckeditor5
 # Editor directories and files
 .vscode
 !.vscode/extensions.json
