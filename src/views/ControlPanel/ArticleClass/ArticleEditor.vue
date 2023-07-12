@@ -175,25 +175,6 @@ onBeforeUnmount(async () => {
 
 </script>
 
-onBeforeUnmount(() => {
-  editorInstance.then((editor: { destroy: () => Promise<any>; }) => {
-    editor.destroy().catch((error: any) => {
-      console.error(error);
-    });
-  });
-});
-
-onMounted(() => {
-  ClassicEditor.create(document.querySelector('#editor') as HTMLElement, {
-    // 配置项
-  }).then(editor => {
-    editorInstance = Promise.resolve(editor);
-  }).catch(error => {
-    console.error(error);
-  });
-});
-</script>
-
 <style scoped>
 .HeaderBox {
   display: flex;
