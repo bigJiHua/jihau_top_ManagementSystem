@@ -24,8 +24,9 @@
     "lib": ["esnext", "dom", "ES6"],
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "removeComments": true
+    "removeComments": true,
+    "types": ["marked"]
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts","ckeditor5-jihua.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts","types"],
   "exclude": ["node_modules"]
 }

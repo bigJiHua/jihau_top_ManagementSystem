@@ -1,8 +1,10 @@
 <template>
-  <h1>通知编辑</h1>
+  <div>文章编辑  </div>
+  <Cekditor></Cekditor>
 </template>
 
 <script setup lang="ts">
+import Cekditor from '@/components/Cekditor/index.vue'
 </script>
 
-<style lang="less" scoped></style>
+<style scoped></style>

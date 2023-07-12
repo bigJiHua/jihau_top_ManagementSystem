@@ -18,7 +18,7 @@ router.beforeEach((to, from, next) => {
         message: '未登录 禁止操作！',
         type: 'warning',
       })
-      next('Login')
+      next('/')
     }
   } else {
     next()

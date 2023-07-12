@@ -2,7 +2,7 @@
   <div class="ArticleDetailPanelBox" @click.self="close">
     <div class="ArticleDetailPanelArea">
       <div class="BoxHeader">
-        <h1>文章预览面板</h1>
+        <h1>快速预览文章面板</h1>
         <el-button type="danger" circle @click.stop="close">
           <el-icon class="closeBtn">
             <CloseBold />
@@ -37,12 +37,35 @@
         </div>
         <!-- 右侧工具面板 -->
         <div class="ActionToolArea">
-          <h3> 标题： <span class="TipText">{{ ArticleData.data.article.title }} </span></h3>
-          <h3> 关键词： <span class="TipText">{{ ArticleData.data.article.keyword }} </span></h3>
-          <h3> 标签： <span class="TipText">{{ ArticleData.data.article.lable }} </span></h3>
-          <h3> 阅读数： <span class="TipText">{{ ArticleData.data.article.read_num }}</span></h3>
-          <h3> 发布日期：<span class="TipText">{{ ArticleData.data.article.pub_date }}</span></h3>
-          <h3> 作者： <span class="TipText">{{ ArticleData.data.article.username }}</span></h3>
+          <div class="spanLine">
+            <h3>
+              <span class="TipLable"> 标题：</span>
+              <span class="TipText">{{ ArticleData.data.article.title }} </span>
+            </h3>
+            <h3>
+              <span class="TipLable"> 作者：</span>
+              <span class="TipText">{{ ArticleData.data.article.username }}</span>
+            </h3>
+          </div>
+          <h3><span class="TipLable"> 关键词：</span>
+            <span class="TipText">{{ ArticleData.data.article.keyword }} </span>
+          </h3>
+          <h3><span class="TipLable"> 标签：</span>
+            <span class="TipText">{{ ArticleData.data.article.lable }} </span>
+          </h3>
+          <div class="spanLine">
+            <h3>
+              <span class="TipLable"> 阅读数：</span>
+              <span class="TipText">{{ ArticleData.data.article.read_num }}</span>
+            </h3>
+            <h3>
+              <span class="TipLable"> 评论数：</span>
+              <span class="TipText">{{ (ArticleData.data.comment).length }}</span>
+            </h3>
+          </div>
+          <h3><span class="TipLable"> 发布日期：</span>
+            <span class="TipText">{{ ArticleData.data.article.pub_date }}</span>
+          </h3>
           <el-row class="ActionBox">
             <el-button type="primary" plain @click="ShowDeleteBtn">删除评论</el-button>
             <el-dropdown split-button type="warning" @command="selectAction">
@@ -102,7 +125,7 @@ const getArticle = async () => {
 }
 // 删除留言
 const deleteComment = async (username: string, commentId: number | string) => {
-  if (await useELTips.WarningTips('删除这条评论')) {
+  if (await useELTips.WarningTips('确定要删除这条评论吗？') === 'true') {
     const delCommentPutData = new PutDataClass();
     delCommentPutData.cagUserName = username
     delCommentPutData.articleId = String(commentId)
@@ -115,7 +138,7 @@ const deleteComment = async (username: string, commentId: number | string) => {
 }
 // 选择文章状态并改变
 const selectAction = async (selectValue: string) => {
-  if (await useELTips.WarningTips('改变文章状态')) {
+  if (await useELTips.WarningTips('确定要改变文章状态吗？') === 'true') {
     const selectActionPutData = new PutDataClass();
     selectActionPutData.cagUserName = ArticleData.data.article.username
     selectActionPutData.articleId = props.ArticleId
@@ -125,11 +148,13 @@ const selectAction = async (selectValue: string) => {
 }
 // 删除该文章
 const deleteArticle = async (articleId: string | number) => {
-  const delArticlePutData = new PutDataClass();
-  delArticlePutData.cagUserName = ArticleData.data.article.username
-  delArticlePutData.articleId = String(articleId)
-  delArticlePutData.func = 'delArticle'
-  await ArticleRequest.cagUPData(delArticlePutData)
+  if (await useELTips.WarningTips('确定要删除这篇文章吗？') === 'true') {
+    const delArticlePutData = new PutDataClass();
+    delArticlePutData.cagUserName = ArticleData.data.article.username
+    delArticlePutData.articleId = String(articleId)
+    delArticlePutData.func = 'delArticle'
+    await ArticleRequest.cagUPData(delArticlePutData)
+  }
 }
 
 onMounted(() => {
@@ -290,5 +315,19 @@ onMounted(() => {
     top: 5px;
     right: 5px;
   }
+}
+
+.spanLine {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+}
+
+.TipLable {
+  display: inline-block;
+  width: 90px;
 }
 </style>

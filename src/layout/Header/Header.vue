@@ -1,6 +1,6 @@
 <template>
   <div class="HeaderBox">
-    <h1>JiHua后台管理面板 control Panel</h1>
+    <h1>JiHua后台管理面板</h1>
     <h3>{{ $route.name }}</h3>
     <div>
       <el-button v-if="token" color="#626aef" @click="outLogin">退出登录</el-button>

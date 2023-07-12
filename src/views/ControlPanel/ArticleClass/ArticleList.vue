@@ -31,11 +31,16 @@
         <template v-slot:default="scope">
           <div>{{ CountDeleteCode(scope.row.is_delete, scope.row.state) }}</div>
         </template>
-      </el-table-column>      
+      </el-table-column>   
+      <el-table-column label="文章类型" width="100">
+        <template v-slot:default="scope">
+          <div>{{ ArticleCate(scope.row.article_cate) }}</div>
+        </template>
+      </el-table-column>     
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="scope">
           <el-button link type="primary" size="small" @click="ArticleDetail(scope.row.article_id)">详细</el-button>
-          <el-button link type="primary" size="small" @click="ArticleEdit(scope.row.article_id)">编辑</el-button>
+          <el-button link type="primary" size="small" @click="ArticleEdit(scope.row.article_id,scope.row.article_cate)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -77,8 +82,12 @@ const ArticleDetail = (article_id: string) => {
 const closePanel = () => {
   isDetail.value = false
 }
-const ArticleEdit = (article_id: string) => {
-  router.push('/controlPanel/ArticleEditor/' + article_id)
+const ArticleEdit = (article_id: string, Cate:string) => {
+  if (Cate === 'article') {
+    router.push('/controlPanel/ArticleEditor/' + article_id)
+  } else {
+    router.push('/controlPanel/NotifyEditor/' + article_id)
+  }
 }
 function isSameData(data1: any[], data2: any[]) {
   return JSON.stringify(data1) === JSON.stringify(data2);
@@ -117,6 +126,11 @@ watch(
 const CountDeleteCode = computed(() => {
   return (state: string, is_delete: string) => {
     return parseInt(state) + parseInt(is_delete) === 0 ? '已发布正常' : '已删除/驳回'
+  }
+})
+const ArticleCate = computed(()=>{
+  return (articleState :string) => {
+    return articleState === 'article' ? '文章' : '通知'
   }
 })
 </script>

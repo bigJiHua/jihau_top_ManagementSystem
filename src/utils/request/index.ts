@@ -1,8 +1,6 @@
 import axios from 'axios'
 import useLocalStorage from '@/Hooks/useLocalStorage'
-import { useRouter } from 'vue-router'
-const router = useRouter()
-import { ElNotification } from 'element-plus'
+import { ElNotification,ElMessage  } from 'element-plus'
 
 
 // 创建axios实例
@@ -34,30 +32,29 @@ request.interceptors.response.use(response => {
       title: '错误',
       message: res.message,
       type: 'warning',
+      duration: 1500
     })
     if (res.status === 401 || res.status === 404) {
       localStorage.removeItem('token')
-      router.push('/')
     }
   } else {
-    ElNotification({
-      title: '成功',
+    ElMessage.success({
       message: res.message,
-      type: 'success',
+      duration: 500
     })
   }
   return response
 }, error => {
-  const errorCode: number = error.response.status
+  const errorCode: number = error.response.status ? error.response.status : 200
   // 在需要显示通知的地方调用函数
   ElNotification({
     title: '错误',
     message: error.response.data.message,
     type: 'error',
+    duration: 1500
   })
   if (errorCode === 401) {
     localStorage.removeItem('token')
-    router.push('/')
   }
   return Promise.reject(error)
 })

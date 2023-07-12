@@ -4,24 +4,22 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 function WarningTips(Tips: string): Promise<string> {
   return new Promise((resolve) => {
     ElMessageBox.confirm(
-      '你确定要' + Tips + '吗？',
+      Tips,
       '提示',
       {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
         type: 'warning',
       }
-    )
-      .then(() => {
-        resolve('true');
-      })
-      .catch(() => {
-        ElMessage({
-          type: 'info',
-          message: '取消' + Tips,
-        });
-        resolve('false');
+    ).then(() => {
+      resolve('true');
+    }).catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '已取消该操作',
       });
+      resolve('false');
+    });
   });
 }
 

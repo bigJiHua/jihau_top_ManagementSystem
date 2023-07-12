@@ -23,12 +23,12 @@ const RouterMap = [
         name: '文章列表',
         component:  () => import('@/views/ControlPanel/ArticleClass/ArticleList.vue')
       },{
-        path: 'ArticleEditor',
+        path: 'ArticleEditor/:articleid?',
         name: '文章编辑',
         component:  () => import('@/views/ControlPanel/ArticleClass/ArticleEditor.vue')
       },
       { 
-        path: 'NotifyEditor',
+        path: 'NotifyEditor/:articleid?',
         name: '通知编辑',
         component: () => import('@/views/ControlPanel/ArticleClass/NotifyEditor.vue')
       },
