@@ -10,32 +10,20 @@
         </el-button>
       </div>
       <div class="ArticleShowArea">
-        <!-- 左侧内容阅览区 -->
-        <div class="ArticleShowAreaBox">
-          <!-- 内容渲染区 -->
-          <div class="content">
-            <p v-html="ArticleData.data.article.content" v-highlight></p>
-          </div>
-          <!-- 留言区 -->
-          <div class="commentArea">
-            <p>留言</p>
-            <div class="comment" v-for="(item, index) in ArticleData.data.comment" :key="index">
-              <p class="comment_user">
-                {{ item.username }}
-                用户 留言：
-              </p>
-              <p class="comment_text">{{ item.comment }}</p>
-              <p class="comment_time">时间:{{ item.pub_date }}</p>
-              <el-button v-show="isDeleteCommentBtn" type="danger" circle
-                @click.stop="deleteComment(item.username, item.id)" class="deleteCommentBtn">
-                <el-icon class="closeBtn">
-                  <CloseBold />
-                </el-icon>
-              </el-button>
-            </div>
+        <div class="content">
+          <p v-html="ArticleData.data.article.content" v-highlight></p>
+        </div>
+        <div class="commentArea">
+          <p>留言</p>
+          <div class="comment" v-for="(item, index) in ArticleData.data.comment" :key="index">
+            <p class="comment_user">
+              {{ item.username }}
+              用户 留言：
+            </p>
+            <p class="comment_text">{{ item.comment }}</p>
+            <p class="comment_time">时间:{{ item.pub_date }}</p>
           </div>
         </div>
-        <!-- 右侧工具面板 -->
         <div class="ActionToolArea">
           <div class="spanLine">
             <h3>
@@ -87,15 +75,16 @@
 
 <script setup lang="ts">
 import ArticleRequest from "@/utils/API/ArticleClass"
-import useELTips from '@/Hooks/ElMessageBoxTips'
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive } from "vue";
+import { useRouter } from "vue-router";
 // 申明对父组件操作
 const emit = defineEmits(['closePanel'])
+const route = useRouter();
 const props = defineProps<{
-  ArticleId: string,
+  ArticleId: String,
   isTrue: boolean
 }>();
-let isDeleteCommentBtn = ref(false)
+
 const ArticleData = reactive({
   data: {
     article: {},
@@ -103,22 +92,11 @@ const ArticleData = reactive({
     goodnum: 0,
     collect: 0
   }
-})
-// 复用传递参数
-class PutDataClass {
-  cagUserName: string = ''
-  articleId: string = ''
-  func: string = ''
-}
+});
 
-// 关闭组件 物理操作
 function close() {
   emit('closePanel')
 }
-function ShowDeleteBtn() {
-  isDeleteCommentBtn.value = !isDeleteCommentBtn.value
-}
-// 获取文章
 const getArticle = async () => {
   const { data: res } = await ArticleRequest.getArchives(String(props.ArticleId))
   ArticleData.data = res.data
@@ -195,54 +173,24 @@ onMounted(() => {
   background-color: rgb(254, 254, 254);
   z-index: 999;
   border-radius: 5px;
+  z-index: 999;
   overflow: hidden;
 }
 
 .ArticleShowArea {
   width: 100%;
   height: 100%;
+  overflow: scroll;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   align-items: flex-start;
   flex-wrap: wrap;
-  padding-bottom: 50px;
-}
-
-.ArticleShowAreaBox {
-  width: 50%;
-  overflow-y: scroll;
-  height: 100%;
 }
 
 .ArticleShowArea::-webkit-scrollbar {
   display: none;
 }
-
-.content {
-  padding: 5px;
-}
-
-.ActionToolArea {
-  width: calc(50% - 20px);
-  padding: 10px;
-  background-color: rgba(200, 221, 249, 0.371);
-  border-radius: 5px;
-
-  .TipText {
-    font-size: 0.8rem;
-  }
-
-  .ActionBox {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-
 
 .BoxHeader {
   width: 100%;
@@ -258,7 +206,16 @@ onMounted(() => {
   font-size: 1.2rem;
 }
 
+.content {
+  padding: 5px;
+  overflow-x: scroll;
+}
+.ActionToolArea {
+  max-width: 100%;
+  padding: 5px;
+}
 .commentArea {
+  max-width: 50%;
   margin-top: 20px;
   padding: 10px 20px 20px 20px;
   border-radius: 5px;
@@ -283,7 +240,6 @@ onMounted(() => {
     border-radius: 4px;
     padding: 5px;
     margin-bottom: 10px;
-    position: relative;
 
     p {
       margin: 0;
@@ -308,12 +264,6 @@ onMounted(() => {
       font-size: 0.5rem;
       text-align: right;
     }
-  }
-
-  .deleteCommentBtn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
   }
 }
 

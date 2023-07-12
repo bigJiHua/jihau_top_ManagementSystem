@@ -28,6 +28,7 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(response => {
   const { data: res } = response
   if (res.status !== 200) {
+    // 在需要显示通知的地方调用函数
     ElNotification({
       title: '错误',
       message: res.message,
@@ -49,7 +50,7 @@ request.interceptors.response.use(response => {
   // 在需要显示通知的地方调用函数
   ElNotification({
     title: '错误',
-    message: error.response.data.message,
+    message: error.message,
     type: 'error',
     duration: 1500
   })
