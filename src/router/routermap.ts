@@ -28,9 +28,27 @@ const RouterMap = [
         component:  () => import('@/views/ControlPanel/ArticleClass/ArticleEditor.vue')
       },
       { 
-        path: 'NotifyEditor/:articleid?',
-        name: '通知编辑',
-        component: () => import('@/views/ControlPanel/ArticleClass/NotifyEditor.vue')
+        path: 'Notify',
+        name: '通知',
+        component: () => import('@/views/ControlPanel/ArticleClass/Notify/index.vue'),
+        redirect: '/controlPanel/Notify/NotifyList',
+        children: [
+          {
+            path: 'NotifyList',
+            name: '通知列表',
+            component: () => import('@/views/ControlPanel/ArticleClass/Notify/NotifyList.vue'),
+          },
+          {
+            path: 'NotifyPost',
+            name: '通知发布',
+            component: () => import('@/views/ControlPanel/ArticleClass/Notify/NotifyPost.vue'),
+          },
+          {
+            path: 'NotifyEditor',
+            name: '通知编辑',
+            component: () => import('@/views/ControlPanel/ArticleClass/Notify/NotifyEditor.vue'),
+          }
+        ]
       },
       // 用户管理
       {

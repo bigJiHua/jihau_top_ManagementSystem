@@ -1,11 +1,12 @@
 import axios from 'axios'
 import useLocalStorage from '@/Hooks/useLocalStorage'
 import { ElNotification,ElMessage  } from 'element-plus'
+import router from '@/router'
 
 
 // 创建axios实例
 const request = axios.create({
-  baseURL: 'http://192.168.0.110/api',
+  baseURL: 'http://127.0.0.1/api',
   timeout: 5000
 })
 
@@ -37,6 +38,7 @@ request.interceptors.response.use(response => {
     })
     if (res.status === 401 || res.status === 404) {
       localStorage.removeItem('token')
+      router.push('/')
     }
   } else {
     ElMessage.success({
@@ -47,15 +49,17 @@ request.interceptors.response.use(response => {
   return response
 }, error => {
   const errorCode: number = error.response.status ? error.response.status : 200
+  const message = error.response.data.message ? error.response.data.message : error.message
   // 在需要显示通知的地方调用函数
   ElNotification({
     title: '错误',
-    message: error.message,
+    message: message,
     type: 'error',
     duration: 1500
   })
   if (errorCode === 401) {
     localStorage.removeItem('token')
+    router.push('/')
   }
   return Promise.reject(error)
 })

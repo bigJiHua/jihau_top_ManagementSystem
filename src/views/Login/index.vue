@@ -40,8 +40,8 @@ import { useTokenStore } from '@/stores/getToken'
 const TokenStore = useTokenStore()
 const router = useRouter()
 
-const username = ref('jihua_test')
-const password = ref('123456')
+const username = ref('')
+const password = ref('')
 const rules = reactive({
   username: {
     rule: /^(?=(.*[a-zA-Z].*))(?=(.*\d.*))[\w]{6,12}$|^(?=(.*[a-zA-Z].*))(?=(.*_.*))[\w]{6,12}$|^(?=(.*\d.*))(?=(.*_.*))[\w]{6,12}$/,

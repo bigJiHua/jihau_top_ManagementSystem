@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { number } from 'echarts'
 // 获取文章列表
 const GetArticleList = (Num: number) => {
   return request.post('/Ctrl/articlelist?Num=' + Num)
@@ -24,9 +25,15 @@ const cagUAData = (reason:string,data:string) => {
   params.append('data', data) // 数据
   return request.post('/Ctrl/cagUAData', params)
 }
+// 文章列表---搜索文章
+const searchArticle = (key: string | number)=>{
+  return request.get('/Ctrl/searchArticle?key=' + key)
+}
+
 export default {
   GetArticleList,
   getArchives,
   cagUPData,
-  cagUAData
+  cagUAData,
+  searchArticle
 }
