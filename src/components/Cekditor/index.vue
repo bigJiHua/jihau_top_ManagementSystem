@@ -7,9 +7,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 
-const props = defineProps<{
-  content: string
-}>();
+const props = defineProps<{ content: string }>();
 
 const id = 'Cekditor';
 const ckeditor = ref<any>(null);
@@ -39,6 +37,4 @@ onBeforeUnmount(() => {
 
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

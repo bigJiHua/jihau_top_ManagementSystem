@@ -14,7 +14,7 @@
         <div class="ArticleShowAreaBox">
           <!-- 内容渲染区 -->
           <div class="content">
-            <p v-html="ArticleData.data.article.content" v-highlight></p>
+            <p v-html="ArticleData.data.article.content" v-highlight style="word-wrap: break-word;"></p>
           </div>
           <!-- 留言区 -->
           <div class="commentArea" v-if="ArticleData.data.comment.length">
@@ -43,18 +43,19 @@
           <h3> 阅读数： <span class="TipText">{{ ArticleData.data.article.read_num }}</span></h3>
           <h3> 发布日期：<span class="TipText">{{ ArticleData.data.article.pub_date }}</span></h3>
           <h3> 作者： <span class="TipText">{{ ArticleData.data.article.username }}</span></h3>
+          <h3> 文章类型： <span class="TipText">{{ props.type }}</span></h3>
           <el-row class="ActionBox">
             <el-button type="primary" plain @click="ShowDeleteBtn">删除评论</el-button>
             <el-dropdown split-button type="warning" @command="selectAction">
               修改状态
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item command="reject">驳回文章</el-dropdown-item>
+                  <el-dropdown-item command="reject">驳回</el-dropdown-item>
                   <el-dropdown-item command="restore">恢复正常</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-            <el-button type="danger" plain @click="deleteArticle(ArticleData.data.article.article_id)">删除文章</el-button>
+            <el-button type="danger" plain @click="deleteArticle(props.ArticleId)">删除</el-button>
           </el-row>
         </div>
       </div>
@@ -71,7 +72,8 @@ import { ElMessage } from 'element-plus'
 const emit = defineEmits(['closePanel'])
 const props = defineProps<{
   ArticleId: string,
-  isTrue: boolean
+  isTrue: boolean,
+  type: string
 }>();
 let isDeleteCommentBtn = ref(false)
 const ArticleData = reactive({
@@ -102,7 +104,7 @@ function ShowDeleteBtn() {
 }
 // 获取文章
 const getArticle = async () => {
-  const { data: res } = await ArticleRequest.getArchives(String(props.ArticleId))
+  const { data: res } = await ArticleRequest.getDetail(String(props.ArticleId), props.type)
   ArticleData.data = res.data
 }
 // 删除留言
@@ -112,7 +114,7 @@ const deleteComment = async (username: string, commentId: number | string) => {
     delCommentPutData.cagUserName = username
     delCommentPutData.articleId = String(commentId)
     delCommentPutData.func = 'delComment'
-    const { data: res } = await ArticleRequest.cagUPData(delCommentPutData)
+    const { data: res } = await ArticleRequest.cagUPData(delCommentPutData, props.type)
     if (res.status === 200) {
       getArticle()
     }
@@ -125,7 +127,7 @@ const selectAction = async (selectValue: string) => {
     selectActionPutData.cagUserName = ArticleData.data.article.username
     selectActionPutData.articleId = props.ArticleId
     selectActionPutData.func = selectValue
-    await ArticleRequest.cagUPData(selectActionPutData)
+    await ArticleRequest.cagUPData(selectActionPutData, props.type)
   }
 }
 // 删除该文章
@@ -135,7 +137,7 @@ const deleteArticle = async (articleId: string | number) => {
     delArticlePutData.cagUserName = ArticleData.data.article.username
     delArticlePutData.articleId = String(articleId)
     delArticlePutData.func = 'delArticle'
-    await ArticleRequest.cagUPData(delArticlePutData)
+    await ArticleRequest.cagUPData(delArticlePutData, props.type)
   }
 }
 

@@ -4,7 +4,9 @@ import { ref, type Ref } from 'vue'
 export const useArticleDataStore = defineStore('ADstore', {
   state: () => ({
     ArticleListData: [] as Array<any>,
-    totalNum: 0
+    NotifyListData: [] as Array<any>,
+    totalNum: 0,
+    totalPageNum: 0
   }),
   // 写
   actions: {
@@ -13,6 +15,12 @@ export const useArticleDataStore = defineStore('ADstore', {
     },
     intotalNum(Num: number) {
       this.totalNum = Num
+    },
+    inNotifyListData(data: any) {
+      this.NotifyListData = data
+    },
+    intotalPageNum(Num: number) {
+      this.totalPageNum = Num
     }
   },
   // 读
@@ -20,8 +28,14 @@ export const useArticleDataStore = defineStore('ADstore', {
     getStoreArticleListData(): Array<any> {
       return this.ArticleListData
     },
+    getStoreNotifyListData() : Array<any> {
+      return this.NotifyListData
+    },
     getTotalNum(): number {
       return this.totalNum
+    },
+    getTotalPageNum(): number {
+      return this.totalPageNum
     }
   },
 })

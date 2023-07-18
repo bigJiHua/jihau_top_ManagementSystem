@@ -68,13 +68,13 @@ const getArticleData = async (id: string) => {
     ElMessage.error('ID不能为空！')
     return
   }
-  router.replace('/controlPanel/ArticleEditor/' + id);
-  const { data: res } = await GetArticleData.getArchives(id)
-  if (res.status!== 200) {
+  const { data: res } = await GetArticleData.getDetail(id,'article')
+  if (res.status !== 200) {
     ElMessage.error('文章已经被删除！')
-  router.replace('/controlPanel/ArticleEditor/');
-  return
+    router.replace('/controlPanel/ArticleEditor/');
+    return
   }
+  router.replace('/controlPanel/ArticleEditor/' + id);
   editorData.value = res.data.article
   Object.assign(newArticleData, editorData.value)
   EditorArticleID.value = ''
@@ -107,7 +107,7 @@ const UpChangeArticleData = async () => {
   if (isChangeArticle(newArticleData, editorData.value)) {
     if (reason.value !== '') {
       const upData = JSON.stringify(useLocalStorage.getRandomSubstring(useLocalStorage.getLoc('token', false), JSON.stringify(editorData.value)))
-      const { data: res } = await GetArticleData.cagUAData(reason.value, upData)
+      const { data: res } = await GetArticleData.cagUAData(reason.value, upData,'article')
       if (res.status === 200) {
         getArticleData(router.currentRoute.value.params.articleid as string)
       }
@@ -158,7 +158,7 @@ onMounted(async () => {
       editorData.value = TemStorageData
       newArticleData = TemStorageData
       ElMessage.success('当前显示的是暂存的内容！')
-      router.replace('/controlPanel/ArticleEditor/'+ TemStorageData.article_id);
+      router.replace('/controlPanel/ArticleEditor/' + TemStorageData.article_id);
     } else if (ArticleID) {
       getArticleData(ArticleID)
     }

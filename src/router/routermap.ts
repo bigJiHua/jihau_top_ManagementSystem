@@ -39,12 +39,17 @@ const RouterMap = [
             component: () => import('@/views/ControlPanel/ArticleClass/Notify/NotifyList.vue'),
           },
           {
-            path: 'NotifyPost',
+            path: 'waitEditor',
+            name: '待发布列表',
+            component: () => import('@/views/ControlPanel/ArticleClass/Notify/waitEditor.vue'),
+          },
+          {
+            path: 'NotifyPost/:postId?',
             name: '通知发布',
             component: () => import('@/views/ControlPanel/ArticleClass/Notify/NotifyPost.vue'),
           },
           {
-            path: 'NotifyEditor',
+            path: 'NotifyEditor/:pageid?',
             name: '通知编辑',
             component: () => import('@/views/ControlPanel/ArticleClass/Notify/NotifyEditor.vue'),
           }

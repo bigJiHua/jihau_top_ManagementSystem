@@ -57,7 +57,7 @@
         @next-click="nextNum" />
     </div>
   </div>
-  <ArticleDetailPanel v-if="isDetail" @closePanel="closePanel" :ArticleId="ArticleId" :isTrue="isTrue">
+  <ArticleDetailPanel v-if="isDetail" @closePanel="closePanel" :ArticleId="ArticleId" :isTrue="isTrue" :type="'article'">
   </ArticleDetailPanel>
 </template>
 
@@ -81,7 +81,7 @@ let isTrue: boolean = false
 const searchKey = ref('')
 // 方法
 async function GetArticleListData(GetNum: number) {
-  const { data: res } = await ArticleRequest.GetArticleList(GetNum)
+  const { data: res } = await ArticleRequest.getDataList(GetNum,'article')
   store.increment(res.data)
   store.intotalNum(res.totalNum)
 }
@@ -125,11 +125,12 @@ const isNonEmptyString = (key: string): boolean => {
 // 搜索文章
 const searchArticleData = async () => {
   if (isNonEmptyString(searchKey.value)) {
-    const { data: res } = await ArticleRequest.searchArticle(searchKey.value)
+    const { data: res } = await ArticleRequest.searchArticle(searchKey.value,'article')
     ArticleData.data = res.data
     searchKey.value = ''
   } else {
     ElMessage.error('关键词不能为空！')
+    GetArticleListData(1)
   }
 }
 // 在组件挂载时获取文章列表数据

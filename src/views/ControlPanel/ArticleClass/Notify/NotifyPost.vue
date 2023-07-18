@@ -1,54 +1,110 @@
 <template>
-  <div class="HeaderBox">
-    <el-button type="primary" class="HeaderItem" size="small" @click="isShowAside">{{ AsideBtn }}</el-button>
-    <el-button type="primary" class="HeaderItem" size="small" @click="TemStorage">暂存</el-button>
-    <el-button type="danger" class="HeaderItem" size="small" @click="Unstage">取消发布</el-button>
-    <el-button type="success" class="HeaderItem" size="small" @click="UpChangeArticleData">发布通知</el-button>
-  </div>
-  <div class="EditorAreaBox">
-    <aside :class="{
-      cagAside: !isChange,
-      opAside: isChange,
-    }">
-      <el-input v-model="editorData.title" placeholder="请输入">
-        <template #prepend>标题：</template>
-      </el-input>
-      <el-input v-model="editorData.lable" placeholder="请输入">
-        <template #prepend>标签：</template>
-      </el-input>
-      <el-input v-model="editorData.keyword" placeholder="请输入">
-        <template #prepend>关键词:</template>
-      </el-input>
-    </aside>
-    <div id="EditorArea" v-if="isShowEditor">
-      <Cekditor :content="editorData.content" v-highlight @cagEditorData="cagEditorData"></Cekditor>
+  <div class="PostNotifyArea">
+    <div class="HeaderBox">
+      <el-button type="primary" class="HeaderItem" size="small" @click="isShowAside">{{ AsideBtn }}</el-button>
+      <el-button type="primary" class="HeaderItem" size="small" @click="TemStorage">暂存</el-button>
+      <el-button type="danger" class="HeaderItem" size="small" @click="Unstage">取消发布</el-button>
+      <el-button type="success" class="HeaderItem" size="small" @click="PostNotifyData">发布通知</el-button>
+    </div>
+    <div class="EditorAreaBox">
+      <aside :class="{
+        cagAside: !isChange,
+        opAside: isChange,
+      }">
+        <el-input v-model="editorData.title" placeholder="请输入">
+          <template #prepend>标题：</template>
+        </el-input>
+        <el-input v-model="editorData.lable" placeholder="请输入">
+          <template #prepend>标签：</template>
+        </el-input>
+        <el-input v-model="editorData.keyword" placeholder="请输入">
+          <template #prepend>关键词:</template>
+        </el-input>
+        <div class="selectBox">
+          <p>谁能看：</p>
+          <el-select v-model="editorData.whosee" class="m-2" placeholder="Select" size="small">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </div>
+        <el-input v-model="editorData.state" placeholder="请输入" disabled>
+          <template #prepend>状态:</template>
+        </el-input>
+      </aside>
+      <div id="EditorArea">
+        <Cekditor :content="editorData.content" @cagEditorData="cagEditorData"></Cekditor>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
-import { ElMessage } from 'element-plus';
+import { ElMessage, ElMessageBox } from 'element-plus';
 import { useRouter } from 'vue-router';
 import useELTips from '@/Hooks/ElMessageBoxTips'
 import useLocalStorage from '@/Hooks/useLocalStorage'
-// import GetArticleData from '@/utils/API/ArticleClass'
+import GetArticleData from '@/utils/API/ArticleClass'
 import Cekditor from '@/components/Cekditor/index.vue'
 const router = useRouter()
-const editorData = ref({})
+const postID = router.currentRoute.value.params.postId as string
+const editorData = ref({
+  title: '',
+  lable: '',
+  keyword: '',
+  content: '',
+  state: 0,
+  whosee: 0
+})
+
+const options = [
+  {
+    value: 0,
+    label: '所有人',
+  }, {
+    value: 1,
+    label: '管理员',
+  }]
 const isChange = ref(false)
-const isShowEditor = ref(editorData.value.content !== '' ? true : false)
 let AsideBtn = ref('收起菜单')
 
-// 暂存
+// 重新编辑待发布的通知
+const getPostNotifyData = async (PostId: string) => {
+  if (!PostId) {
+    ElMessage.error('ID不能为空！')
+    return
+  }
+  const { data: res } = await GetArticleData.getDetail(PostId, 'notify')
+  if (res.status !== 200) {
+    ElMessage.error('文章已经被删除！')
+    router.replace('/controlPanel/Notify/NotifyPost/');
+    return
+  }
+  router.replace('/controlPanel/Notify/NotifyPost/' + PostId);
+  editorData.value = res.data.article
+}
+// 暂存PostNotifyData
 const TemStorage = () => {
-  if (newArticleData.content === undefined) {
+  if (editorData.value.content === undefined) {
     ElMessage.warning('内容空空，没有什么可存的，请输入文章ID进行编辑吧！')
   } else {
-    useLocalStorage.setLoc('TemStorageA', newArticleData, false)
-    if (useLocalStorage.getLoc('TemStorageA', false).content !== undefined) {
-      ElMessage.success('暂存在本地成功！')
-    }
+    ElMessageBox.confirm(
+      '你要选择保存在本地还是以待发布的状态存在？',
+      '提示',
+      {
+        confirmButtonText: '上传待发布',
+        cancelButtonText: '保存在本地',
+        type: 'warning',
+      }
+    ).then(() => {
+      // 设置状态为待发布
+      editorData.value.state = 1
+      PostNotifyData() // 调用上传函数
+    }).catch(() => {
+      useLocalStorage.setLoc('TemStorageN', editorData.value, false)
+      if (useLocalStorage.getLoc('TemStorageN', false).content !== undefined) {
+        ElMessage.success('暂存在本地成功！')
+      }
+    });
   }
 }
 // 同步数据
@@ -64,11 +120,30 @@ const cagEditorData = (cagData: string) => {
   }
 }
 // 提交修改 TODO
-const UpChangeArticleData = async () => {
-  // const upData = JSON.stringify(useLocalStorage.getRandomSubstring(useLocalStorage.getLoc('token', false), JSON.stringify(editorData.value)))
-  // const { data: res } = await GetArticleData.cagUAData(reason.value, upData)
+const PostNotifyData = async () => {
+  if (!isCheck(editorData.value.content) && !isCheck(editorData.value.title) && !isCheck(editorData.value.lable) && !isCheck(editorData.value.keyword)) {
+    ElMessage.warning('内容空空，务必确保你的通知名、标签、关键词完整！')
+  } else {
+    if (await useELTips.WarningTips('你确定要变更状态发布该通知吗？') === 'true') {
+      editorData.value.state = 0
+    }
+    const { data: res } = await GetArticleData.postNotify(editorData.value, postID)
+    if (res.status === 200) {
+      editorData.value = {
+        title: '',
+        lable: '',
+        keyword: '',
+        content: '',
+        state: 0,
+        whosee: 0
+      }
+    }
+  }
 }
-// 取消编辑
+function isCheck(value: string) {
+  return value !== '' && value !== undefined && value !== null
+}
+// 取消发布
 const Unstage = async () => {
   if (await useELTips.WarningTips('确定要取消编辑吗？你可以选择暂存待会再看看！') === 'true') {
     router.back()
@@ -83,21 +158,24 @@ const isShowAside = () => {
     AsideBtn.value = '收起菜单'
   }
 }
+// 加载时获取 ID？ 或者自动保存
 onMounted(async () => {
-  if (localStorage.getItem('TemStorageA')) {
+  if (localStorage.getItem('TemStorageN')) {
     if (await useELTips.WarningTips('上次还有保存的数据哟！要继续编辑吗？') === 'true') {
-      const TemStorageData = JSON.parse(localStorage.getItem('TemStorageA') as string)
+      const TemStorageData = JSON.parse(localStorage.getItem('TemStorageN') as string)
       editorData.value = TemStorageData
       ElMessage.success('当前显示的是暂存的内容！')
-      router.replace('/controlPanel/ArticleEditor/' + TemStorageData.article_id);
     }
+  } else if (postID) {
+    getPostNotifyData(postID)
   }
 })
 // 在组件销毁之前执行的操作
+// 文章不为空且没按提交按钮
 onBeforeUnmount(async () => {
   if (localStorage.getItem('TemStorageA')) {
     if (await useELTips.WarningTips('检测到本地有暂存，还未提交，需要保留吗？') !== 'true') {
-      localStorage.removeItem('TemStorageA')
+      localStorage.removeItem('TemStorageN')
       ElMessage.warning('暂存已删除')
     }
   }
@@ -106,6 +184,12 @@ onBeforeUnmount(async () => {
 </script>
 
 <style scoped>
+.PostNotifyArea {
+  height: calc(100vh - 100px);
+  overflow: hidden;
+  width: 100%;
+}
+
 .HeaderBox {
   display: flex;
   justify-content: space-between;
@@ -211,5 +295,14 @@ onBeforeUnmount(async () => {
 
 .cke_chrome {
   padding: 0;
+}
+
+.selectBox {
+  display: flex;
+  margin-top: 10px;
+}
+
+/deep/.el-input-group {
+  margin-top: 10px;
 }
 </style>
