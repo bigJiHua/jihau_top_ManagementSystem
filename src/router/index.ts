@@ -3,7 +3,7 @@ import RouterMap from '@/router/routerMap'
 import { ElNotification } from 'element-plus'
 // layout 布局
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),//TODO 生产环境需要修改为/admin/ import.meta.env.BASE_URL
   routes: RouterMap
 })
 router.beforeEach((to, from, next) => {

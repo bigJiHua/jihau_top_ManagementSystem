@@ -1,7 +1,7 @@
 <template>
   <div class="ArticleListArea">
     <div class="searchBar">
-      <el-input v-model="searchKey" size="large" class="HeaderItem" placeholder="搜索文章">
+      <el-input v-model="searchKey" size="large" class="HeaderItem" placeholder="搜索通知">
         <template #append>
           <el-button :icon="Search" @click="searchArticleData" />
         </template>
@@ -9,12 +9,11 @@
     </div>
     <el-table :data="ArticleData.data" class="ArticleListTable" border table-layout="fixed"
       style="width: 100%; height: calc(100% - 80px); overflow-x: auto;" stripe>
-      <el-table-column fixed prop="article_id" label="文章ID" width="70">
+      <el-table-column fixed prop="article_id" label="文章ID" width="80">
         <template v-slot="scope">
-          <a :href="`https://jihau.top/article/` + scope.row.article_id" target="_blank"
-            class="defalut_a_black articleId">
-            {{ scope.row.article_id }}
-          </a>
+          <router-link :to="'/controlPanel/NotifyEditor/' + scope.row.notify_id" class="defalut_a_black">{{
+            scope.row.notify_id
+          }}</router-link>
         </template>
       </el-table-column>
       <el-table-column prop="title" label="文章标题" width="120" />
@@ -31,24 +30,16 @@
       </el-table-column>
       <el-table-column prop="keyword" label="关键词" width="150" />
       <el-table-column prop="lable" label="标签" width="150" />
-      <el-table-column prop="read_num" label="浏览次数" width="70" />
       <el-table-column prop="pub_date" label="发布日期" width="90" />
-      <el-table-column prop="username" label="作者" width="60" />
-      <el-table-column prop="is_delete" label="状态" width="100">
+      <el-table-column prop="username" label="作者" width="80" />
+      <el-table-column prop="is_delete" label="状态" width="70">
         <template v-slot="scope">
-          <div class="Limit-content">{{ CountDeleteCode(scope.row.is_delete) }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column label="文章类型" width="100">
-        <template v-slot:default="scope">
-          <div>{{ ArticleCate(scope.row.article_cate) }}</div>
+          <div class="Limit-content">{{ CountDeleteCode(scope.row.state) }}</div>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="scope">
-          <el-button link type="primary" size="small" @click="ArticleDetail(scope.row.article_id)">详细</el-button>
-          <el-button link type="primary" size="small"
-            @click="ArticleEdit(scope.row.article_id, scope.row.article_cate)">编辑</el-button>
+          <el-button link type="primary" size="small" @click="ArticleEdit(scope.row.notify_id)">编辑发布</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -57,8 +48,6 @@
         @next-click="nextNum" />
     </div>
   </div>
-  <ArticleDetailPanel v-if="isDetail" @closePanel="closePanel" :ArticleId="ArticleId" :isTrue="isTrue" :type="'article'">
-  </ArticleDetailPanel>
 </template>
 
 <script setup lang="ts">
@@ -68,46 +57,22 @@ import ArticleRequest from "@/utils/API/ArticleClass"
 import { useArticleDataStore } from '@/stores/ArticleClass'
 import { Search } from '@element-plus/icons-vue'
 import { useRouter } from "vue-router"
-import ArticleDetailPanel from '@/components/ArticleClass/ArticleDetailPanel.vue'
 import { ElMessage } from "element-plus";
 // 数据定义 
 const store = useArticleDataStore()
-let ArticleData = reactive({ data: store.getStoreArticleListData })
+let ArticleData = reactive({ data: '' })
 let router = useRouter()
-let isDetail = ref(false)
-let total = ref(store.getTotalNum)
-let ArticleId: string = ''
-let isTrue: boolean = false
+let total = ref(0)
 const searchKey = ref('')
-let nowPagenum = 1
 // 方法
 async function GetArticleListData(GetNum: number) {
-  const { data: res } = await ArticleRequest.getDataList(GetNum, 'article')
-  store.increment(res.data)
-  store.intotalNum(res.totalNum)
-}
-// DELETE
-// setInterval(()=>{
-//   GetArticleListData(1)
-// },800)
-// 展开细节Panel
-const ArticleDetail = (article_id: string) => {
-  isDetail.value = true
-  ArticleId = article_id
-  isTrue = true
-}
-// 关闭Panel
-const closePanel = () => {
-  isDetail.value = false
-  GetArticleListData(nowPagenum)
+  const { data: res } = await ArticleRequest.getDataList(GetNum, 'wait_notify')
+  ArticleData.data = res.data
+  total.value = res.totalNum
 }
 // 编辑跳转
-const ArticleEdit = (article_id: string, Cate: string) => {
-  if (Cate === 'article') {
-    router.push('/controlPanel/ArticleEditor/' + article_id)
-  } else {
-    router.push('/controlPanel/NotifyEditor/' + article_id)
-  }
+const ArticleEdit = (article_id: string) => {
+  router.push('/controlPanel/NotifyEditor/' + article_id)
 }
 function isSameData(data1: any[], data2: any[]) {
   return JSON.stringify(data1) === JSON.stringify(data2);
@@ -115,17 +80,14 @@ function isSameData(data1: any[], data2: any[]) {
 // 上一页
 const prevNum = (num: number) => {
   GetArticleListData(num)
-  nowPagenum = num
 }
 // 数字
 const pagerNum = (num: number) => {
   GetArticleListData(num)
-  nowPagenum = num
 }
 // 下一页
 const nextNum = (num: number) => {
   GetArticleListData(num)
-  nowPagenum = num
 }
 const isNonEmptyString = (key: string): boolean => {
   const trimmedInput = key.trim();
@@ -134,27 +96,22 @@ const isNonEmptyString = (key: string): boolean => {
 // 搜索文章
 const searchArticleData = async () => {
   if (isNonEmptyString(searchKey.value)) {
-    const { data: res } = await ArticleRequest.search(searchKey.value, 'article')
+    const { data: res } = await ArticleRequest.search(searchKey.value, 'wait_notify')
     ArticleData.data = res.data
     searchKey.value = ''
   } else {
     ElMessage.error('关键词不能为空！')
-    GetArticleListData(1)
-    nowPagenum = 1
   }
 }
 // 在组件挂载时获取文章列表数据
 onMounted(() => {
-  if (store.getStoreArticleListData.length === 0) {
-    GetArticleListData(1)
-    nowPagenum = 1
-  }
+  GetArticleListData(1)
 })
 // 监听属性
 watch(
   [
-    () => store.getStoreArticleListData,
-    () => store.getTotalNum
+    () => store.getStoreNotifyListData,
+    () => store.getTotalPageNum
   ], // 新值                        旧值
   ([newArticleData, newTotalNum], [oldArticleData, oldTotalNum]) => {
     if (!isSameData(ArticleData.data, newArticleData)) {
@@ -166,12 +123,7 @@ watch(
 // 计算属性
 const CountDeleteCode = computed(() => {
   return (state: string) => {
-    return parseInt(state) === 0 ? '已发布正常' : '已删除'
-  }
-})
-const ArticleCate = computed(() => {
-  return (articleState: string) => {
-    return articleState === 'article' ? '文章' : '通知'
+    return parseInt(state) === 0 ? '已发布正常' : '待发布'
   }
 })
 </script>

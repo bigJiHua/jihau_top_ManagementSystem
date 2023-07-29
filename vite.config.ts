@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: './',//TODO 生产部署需要配置此项 /admin
   plugins: [
     vue()
   ],

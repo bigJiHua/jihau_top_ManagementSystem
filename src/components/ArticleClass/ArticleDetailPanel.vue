@@ -78,8 +78,23 @@ const props = defineProps<{
 let isDeleteCommentBtn = ref(false)
 const ArticleData = reactive({
   data: {
-    article: {},
-    comment: [],
+    article: {
+      content: '',
+      title: '',
+      keyword: '',
+      lable: '',
+      pub_date: '',
+      username: '',
+      read_num: '',
+    },
+    comment: [
+      {
+        username: '',
+        comment: '',
+        pub_date: '',
+        id: '',
+      }
+    ],
     goodnum: 0,
     collect: 0
   }
@@ -109,7 +124,7 @@ const getArticle = async () => {
 }
 // 删除留言
 const deleteComment = async (username: string, commentId: number | string) => {
-  if (await useELTips.WarningTips('你确定要删除这条评论吗？')) {
+  if (await useELTips.WarningTips('你确定要删除这条评论吗？') === 'true') {
     const delCommentPutData = new PutDataClass();
     delCommentPutData.cagUserName = username
     delCommentPutData.articleId = String(commentId)
@@ -122,7 +137,7 @@ const deleteComment = async (username: string, commentId: number | string) => {
 }
 // 选择文章状态并改变
 const selectAction = async (selectValue: string) => {
-  if (await useELTips.WarningTips('你确定要改变文章状态吗？')) {
+  if (await useELTips.WarningTips('你确定要改变文章状态吗？') === 'true') {
     const selectActionPutData = new PutDataClass();
     selectActionPutData.cagUserName = ArticleData.data.article.username
     selectActionPutData.articleId = props.ArticleId
@@ -132,12 +147,15 @@ const selectAction = async (selectValue: string) => {
 }
 // 删除该文章
 const deleteArticle = async (articleId: string | number) => {
-  if (await useELTips.WarningTips('你真的要删除这篇文章？')) {
+  if (await useELTips.WarningTips('你真的要删除这篇文章？') === 'true') {
     const delArticlePutData = new PutDataClass();
     delArticlePutData.cagUserName = ArticleData.data.article.username
     delArticlePutData.articleId = String(articleId)
     delArticlePutData.func = 'delArticle'
-    await ArticleRequest.cagUPData(delArticlePutData, props.type)
+    const { data: res } = await ArticleRequest.cagUPData(delArticlePutData, props.type)
+    if (res.status === 200) {
+      close()
+    }
   }
 }
 

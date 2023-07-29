@@ -37,10 +37,16 @@ const setLoc = (key: string, value: string | Array<any> | Object, isDecry: boole
   localStorage.setItem(key, JSON.stringify(isDecry ? encryptData(value) : value));
 };
 
+// 删除Value
+const remLoc = (key: string) => {
+  localStorage.removeItem(key);
+};
+
 export default {
   encryptData,
   decryptData, 
   getLoc, 
   setLoc,
-  getRandomSubstring
+  getRandomSubstring,
+  remLoc
 }

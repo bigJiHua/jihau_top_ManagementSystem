@@ -27,39 +27,38 @@ const RouterMap = [
         name: '文章编辑',
         component:  () => import('@/views/ControlPanel/ArticleClass/ArticleEditor.vue')
       },
-      { 
-        path: 'Notify',
-        name: '通知',
-        component: () => import('@/views/ControlPanel/ArticleClass/Notify/index.vue'),
-        redirect: '/controlPanel/Notify/NotifyList',
-        children: [
-          {
-            path: 'NotifyList',
-            name: '通知列表',
-            component: () => import('@/views/ControlPanel/ArticleClass/Notify/NotifyList.vue'),
-          },
-          {
-            path: 'waitEditor',
-            name: '待发布列表',
-            component: () => import('@/views/ControlPanel/ArticleClass/Notify/waitEditor.vue'),
-          },
-          {
-            path: 'NotifyPost/:postId?',
-            name: '通知发布',
-            component: () => import('@/views/ControlPanel/ArticleClass/Notify/NotifyPost.vue'),
-          },
-          {
-            path: 'NotifyEditor/:pageid?',
-            name: '通知编辑',
-            component: () => import('@/views/ControlPanel/ArticleClass/Notify/NotifyEditor.vue'),
-          }
-        ]
+      // 通知
+      {
+        path: 'NotifyList',
+        name: '通知列表',
+        component: () => import('@/views/ControlPanel/NotifyClass/NotifyList.vue'),
+      },
+      {
+        path: 'waitEditor',
+        name: '待发布列表',
+        component: () => import('@/views/ControlPanel/NotifyClass/waitEditor.vue'),
+      },
+      {
+        path: 'NotifyPost/:postId?',
+        name: '通知发布',
+        component: () => import('@/views/ControlPanel/NotifyClass/NotifyPost.vue'),
+      },
+      {
+        path: 'NotifyEditor/:pageid?',
+        name: '通知编辑',
+        component: () => import('@/views/ControlPanel/NotifyClass/NotifyEditor.vue'),
+      },
+      // 回收站
+      {
+        path: 'recycle',
+        name: '回收站',
+        component:  () => import('@/views/ControlPanel/RecycleClass/index.vue')
       },
       // 用户管理
       {
         path: 'UserList',
         name: 'UserList',
-        component:  () => import('@/views/ControlPanel/UserClass/UserList.vue')
+        component:  () => import('@/views/ControlPanel/UserClass/UserList/index.vue')
       },{
         path: 'Rmanagement',
         name: 'Rmanagement',

@@ -15,6 +15,13 @@ const ckeditor = ref<any>(null);
 const CKEDITOR: any = window.CKEDITOR;
 const emit = defineEmits(['cagEditorData'])
 
+const get = setInterval(() => {
+  ckeditor.value.setData(props.content);
+}, 200);
+setTimeout(() => {
+  clearInterval(get);
+}, 800);
+
 setInterval(() => {
   emit('cagEditorData', ckeditor.value.getData())
 }, 800)

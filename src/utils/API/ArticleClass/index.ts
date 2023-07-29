@@ -27,7 +27,7 @@ const cagUAData = (reason: string, data: string,type:string) => {
   return request.post('/Ctrl/cagUAData', params)
 }
 // 文章列表---搜索文章
-const searchArticle = (key: string | number, type: string) => {
+const search = (key: string | number, type: string) => {
   return request.get('/Ctrl/searchArticle?key=' + key + '&type=' + type)
 }
 
@@ -42,6 +42,7 @@ const postNotify = (data: { title: string, lable: string, keyword: string, conte
   params.append('content', data.content)
   params.append('state', data.state)
   params.append('whosee', data.whosee)
+  // 复用接口 id用于校验待发布通知用的
   if(id) {
     return request.post('/Ctrl/postnotify?id='+id, params)
   }
@@ -54,7 +55,7 @@ export default {
   getDetail,
   cagUPData,
   cagUAData,
-  searchArticle,
+  search,
   postNotify,
   getDataList
 }

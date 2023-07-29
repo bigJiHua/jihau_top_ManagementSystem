@@ -1,45 +1,59 @@
 <template>
-  <div class="HeaderBox">
-    <el-input v-model="EditorArticleID" class="HeaderItem" placeholder="输入编辑ID">
-      <template #append>
-        <el-button :icon="Search" @click="getArticleData(EditorArticleID)" />
-      </template>
-    </el-input>
-    <el-button type="primary" class="HeaderItem" size="small" @click="isShowAside">{{ AsideBtn }}</el-button>
-    <el-button type="primary" class="HeaderItem" size="small" @click="TemStorage">暂存</el-button>
-    <el-button type="success" class="HeaderItem" size="small" @click="UpChangeArticleData">提交变更</el-button>
-    <el-button type="danger" class="HeaderItem" size="small" @click="Unstage">取消编辑</el-button>
-  </div>
-  <div class="EditorAreaBox">
-    <aside :class="{
-      cagAside: !isChange,
-      opAside: isChange,
-    }">
-      <el-input v-model="editorData.title" placeholder="请输入">
-        <template #prepend>标题：</template>
-      </el-input>
-      <el-input v-model="editorData.lable" placeholder="请输入">
-        <template #prepend>标签：</template>
-      </el-input>
-      <el-input v-model="editorData.keyword" placeholder="请输入">
-        <template #prepend>关键词:</template>
-      </el-input>
-      <el-input v-model="editorData.cover_img" placeholder="请输入">
-        <template #prepend>封面：</template>
-      </el-input>
-      <el-input v-model="editorData.cover_img">
-        <template #prepend>预览:
-          <img :src="editorData.cover_img" alt="文章封面" class="pvimg" />
+  <div class="EditorNotifyArea">
+    <div class="HeaderBox">
+      <el-input v-model="EditorPageID" class="HeaderItem" placeholder="输入编辑ID">
+        <template #append>
+          <el-button :icon="Search" @click="getArticleData(EditorPageID)" />
         </template>
       </el-input>
-      <p>变更任何人的文章都需要变更缘由：</p>
-      <el-input v-model="reason" placeholder="输入缘由，不能为空" clearable />
-      <p>
-        ⚠：没有内容？请输入对应文章ID进行编辑，后台管理面板不支持发布文章，需要登录前台站点后台发布新文章
-      </p>
-    </aside>
-    <div id="EditorArea">
-      <Cekditor :content="editorData.content" v-highlight @cagEditorData="cagEditorData"></Cekditor>
+      <el-button type="primary" class="HeaderItem" size="small" @click="isShowAside">{{ AsideBtn }}</el-button>
+      <el-button type="primary" class="HeaderItem" size="small" @click="TemStorage">暂存</el-button>
+      <el-button type="success" class="HeaderItem" size="small" @click="UpChangeArticleData">提交变更</el-button>
+      <el-button type="danger" class="HeaderItem" size="small" @click="Unstage">取消编辑</el-button>
+    </div>
+    <div class="EditorAreaBox">
+      <aside :class="{
+        cagAside: !isChange,
+        opAside: isChange,
+      }">
+        <el-input v-model="editorData.title" placeholder="请输入">
+          <template #prepend>标题：</template>
+        </el-input>
+        <el-input v-model="editorData.lable" placeholder="请输入">
+          <template #prepend>标签：</template>
+        </el-input>
+        <el-input v-model="editorData.keyword" placeholder="请输入">
+          <template #prepend>关键词:</template>
+        </el-input>
+        <el-input v-model="editorData.cover_img" placeholder="请输入">
+          <template #prepend>封面：</template>
+        </el-input>
+        <div class="SelectBox">
+          <span>发布日期:</span>
+          <el-date-picker v-model="editorData.pub_date" type="date" placeholder="Pick a date" />
+        </div>
+        <div class="SelectBox">
+          <span>更改可见:</span>
+          <el-select v-model="editorData.whosee" class="m-2" placeholder="Select" size="small">
+            <el-option v-for="item in SelectWhosee" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </div>
+        <div class="SelectBox">
+          <span>发布状态:</span>
+          <el-select v-model="editorData.state" class="m-2" placeholder="Select" size="small">
+            <el-option v-for="item in Selectstate" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </div>
+        <p>变更任何人的通知都需要变更缘由：</p>
+        <el-input v-model="reason" placeholder="输入缘由，不能为空" clearable />
+        <p>
+          ⚠：没有内容？请输入对应通知ID进行编辑
+        </p>
+        <h3 style="color: red;" v-if="editorData.state">当前编辑的通知为待发布，如要发布请选择    发布状态 的选项</h3>
+      </aside>
+      <div id="EditorArea">
+        <Cekditor :content="editorData.content" v-highlight @cagEditorData="cagEditorData"></Cekditor>
+      </div>
     </div>
   </div>
 </template>
@@ -53,6 +67,7 @@ import useELTips from '@/Hooks/ElMessageBoxTips'
 import useLocalStorage from '@/Hooks/useLocalStorage'
 import GetArticleData from '@/utils/API/ArticleClass'
 import Cekditor from '@/components/Cekditor/index.vue'
+
 const router = useRouter()
 const editorData = ref({
   content: '',
@@ -62,7 +77,9 @@ const editorData = ref({
   pub_date: '',
   username: '',
   read_num: '',
-  cover_img: ''
+  cover_img: '',
+  whosee: '',
+  state: 0
 })
 // 这里存储文章的源数据
 let newArticleData = reactive({
@@ -73,37 +90,56 @@ let newArticleData = reactive({
   pub_date: '',
   username: '',
   read_num: '',
-  cover_img: ''
+  cover_img: '',
+  whosee: '',
+  state: 0
 })
 const isChange = ref(false)
+const ArticleID = router.currentRoute.value.params.pageid as string
 let reason = ref('')
 let AsideBtn = ref('收起菜单')
-let EditorArticleID = ref('')
-
+let EditorPageID = ref('')
+const SelectWhosee = [{
+  value: 0,
+  label: '任何人',
+},
+{
+  value: 1,
+  label: '管理员',
+}]
+const Selectstate = [{
+  value: 0,
+  label: '发布',
+},
+{
+  value: 1,
+  label: '待发布',
+}]
 // 获取文章如果有Id的话
 const getArticleData = async (id: string) => {
   if (!id) {
     ElMessage.error('ID不能为空！')
     return
   }
-  const { data: res } = await GetArticleData.getDetail(id, 'article')
+  const { data: res } = await GetArticleData.getDetail(id, 'notify')
   if (res.status !== 200) {
-    ElMessage.error('文章已经被删除！')
-    router.replace('/controlPanel/ArticleEditor/');
+    ElMessage.error('通知已经被删除！')
+    router.replace('/controlPanel/NotifyEditor');
     return
   }
-  router.replace('/controlPanel/ArticleEditor/' + id);
+  router.replace('/controlPanel/NotifyEditor/' + id);
   editorData.value = res.data.article
+  // 拷贝源数据，用于后期变更校对是否有差
   Object.assign(newArticleData, editorData.value)
-  EditorArticleID.value = ''
+  EditorPageID.value = ''
 }
 // 暂存
 const TemStorage = () => {
   if (newArticleData.content === undefined) {
     ElMessage.warning('内容空空，没有什么可存的，请输入文章ID进行编辑吧！')
   } else {
-    useLocalStorage.setLoc('TemStorageA', newArticleData, false)
-    if (useLocalStorage.getLoc('TemStorageA', false).content !== undefined) {
+    useLocalStorage.setLoc('TemStorageN', newArticleData, false)
+    if (useLocalStorage.getLoc('TemStorageN', false).content !== undefined) {
       ElMessage.success('暂存在本地成功！')
     }
   }
@@ -125,9 +161,9 @@ const UpChangeArticleData = async () => {
   if (isChangeArticle(newArticleData, editorData.value)) {
     if (reason.value !== '') {
       const upData = JSON.stringify(useLocalStorage.getRandomSubstring(useLocalStorage.getLoc('token', false), JSON.stringify(editorData.value)))
-      const { data: res } = await GetArticleData.cagUAData(reason.value, upData, 'article')
+      const { data: res } = await GetArticleData.cagUAData(reason.value, upData, 'notify')
       if (res.status === 200) {
-        getArticleData(router.currentRoute.value.params.articleid as string)
+        router.push('/controlPanel/NotifyList');
       }
     } else {
       ElMessage.error('修改任何文章需要理由，请输入理由！')
@@ -169,14 +205,13 @@ const isChangeArticle = (obj1: any, obj2: any) => {
   return false // 值未变
 }
 onMounted(async () => {
-  const ArticleID = router.currentRoute.value.params.articleid as string
-  if (localStorage.getItem('TemStorageA')) {
+  if (localStorage.getItem('TemStorageN')) {
     if (await useELTips.WarningTips('上次还有保存的数据哟！要继续编辑吗？') === 'true') {
-      const TemStorageData = JSON.parse(localStorage.getItem('TemStorageA') as string)
+      const TemStorageData = JSON.parse(localStorage.getItem('TemStorageN') as string)
       editorData.value = TemStorageData
       newArticleData = TemStorageData
       ElMessage.success('当前显示的是暂存的内容！')
-      router.replace('/controlPanel/ArticleEditor/' + TemStorageData.article_id);
+      router.replace('/controlPanel/NotifyEditor/' + TemStorageData.article_id);
     } else if (ArticleID) {
       getArticleData(ArticleID)
     }
@@ -186,9 +221,9 @@ onMounted(async () => {
 })
 // 在组件销毁之前执行的操作
 onBeforeUnmount(async () => {
-  if (localStorage.getItem('TemStorageA')) {
+  if (localStorage.getItem('TemStorageN')) {
     if (await useELTips.WarningTips('检测到本地有暂存，还未提交，需要保留吗？') !== 'true') {
-      localStorage.removeItem('TemStorageA')
+      localStorage.removeItem('TemStorageN')
       ElMessage.warning('暂存已删除')
     }
   }
@@ -197,9 +232,20 @@ onBeforeUnmount(async () => {
 </script>
 
 <style scoped>
+.EditorNotifyArea {
+  height: calc(100vh - 100px);
+  overflow: scroll;
+  width: 100%;
+}
+
+.EditorNotifyArea::-webkit-scrollbar {
+  display: none;
+}
+
 .HeaderBox {
   display: flex;
   justify-content: space-between;
+
   padding: 8px 20px;
   flex-direction: row;
   flex-wrap: wrap;
@@ -302,5 +348,8 @@ onBeforeUnmount(async () => {
 
 .cke_chrome {
   padding: 0;
+}
+.SelectBox {
+  margin-top: 10px;
 }
 </style>
