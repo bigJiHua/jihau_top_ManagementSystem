@@ -57,34 +57,18 @@ const RouterMap = [
       // 用户管理
       {
         path: 'UserList',
-        name: 'UserList',
+        name: '用户列表',
         component:  () => import('@/views/ControlPanel/UserClass/UserList/index.vue')
-      },{
-        path: 'Rmanagement',
-        name: 'Rmanagement',
-        component:  () => import('@/views/ControlPanel/UserClass/Rmanagement.vue')
       },
       // 数据统计
       {
         path: 'ArticleCount',
-        name: 'ArticleCount',
+        name: '文章统计',
         component:  () => import('@/views/ControlPanel/DataCountClass/ArticleCount.vue')
       },{
         path: 'UserCount',
-        name: 'UserCount',
+        name: '用户统计',
         component:  () => import('@/views/ControlPanel/DataCountClass/UserCount.vue')
-      },{
-        path: 'VisitCount',
-        name: 'VisitCount',
-        component:  () => import('@/views/ControlPanel/DataCountClass/VisitCount.vue')
-      },{
-        path: 'UserActivity',
-        name: 'UserActivity',
-        component:  () => import('@/views/ControlPanel/DataCountClass/UserActivity.vue')
-      },{
-        path: 'EquipmentCount',
-        name: 'EquipmentCount',
-        component:  () => import('@/views/ControlPanel/DataCountClass/EquipmentCount.vue')
       },{
         path: 'sourceCount',
         name: 'sourceCount',

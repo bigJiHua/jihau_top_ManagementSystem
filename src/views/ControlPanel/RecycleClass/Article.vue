@@ -30,17 +30,12 @@
       </el-table-column>
       <el-table-column prop="keyword" label="关键词" width="150" />
       <el-table-column prop="lable" label="标签" width="150" />
-      <el-table-column prop="read_num" label="浏览次数" width="70" />
-      <el-table-column prop="pub_date" label="发布日期" width="90" />
-      <el-table-column prop="username" label="作者" width="60" />
-      <el-table-column prop="is_delete" label="状态" width="100">
+      <el-table-column prop="read_num" label="浏览次数" sortable width="90" />
+      <el-table-column prop="pub_date" label="发布日期" sortable width="90" />
+      <el-table-column prop="username" label="作者" width="90" />
+      <el-table-column prop="is_delete" label="状态" width="60">
         <template v-slot="scope">
           <div class="Limit-content">{{ CountDeleteCode(scope.row.is_delete) }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column label="文章类型" width="100">
-        <template v-slot:default="scope">
-          <div>{{ ArticleCate(scope.row.article_cate) }}</div>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="120">

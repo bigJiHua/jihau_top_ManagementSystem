@@ -30,15 +30,15 @@
       </el-table-column>
       <el-table-column prop="keyword" label="关键词" width="150" />
       <el-table-column prop="lable" label="标签" width="150" />
-      <el-table-column prop="read_num" label="浏览次数" width="70" />
-      <el-table-column prop="pub_date" label="发布日期" width="90" />
+      <el-table-column prop="read_num" label="浏览次数" sortable width="90" />
+      <el-table-column prop="pub_date" label="发布日期" sortable width="90" />
       <el-table-column prop="username" label="作者" width="80" />
-      <el-table-column prop="is_delete" label="状态" width="100">
+      <el-table-column prop="is_delete" label="状态" width="60">
         <template v-slot="scope">
           <div class="Limit-content">{{ CountDeleteCode(scope.row.is_delete) }}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="whosee" label="谁能看" width="100">
+      <el-table-column prop="whosee" label="谁能看" width="80">
         <template v-slot="scope">
           <div class="Limit-content">{{ whosee(scope.row.whosee) }}</div>
         </template>
@@ -46,7 +46,7 @@
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="scope">
           <el-button link type="primary" size="small" @click="detailPanelShow(scope.row.notify_id)">详细</el-button>
-          <el-button link type="primary" size="small" @click="deletePage(scope.row.notify_id)">彻底删除</el-button>
+          <el-button link type="danger" size="small" @click="deletePage(scope.row.notify_id)">彻底删除</el-button>
         </template>
       </el-table-column>
     </el-table>

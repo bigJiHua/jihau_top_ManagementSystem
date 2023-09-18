@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column prop="keyword" label="关键词" width="150" />
       <el-table-column prop="lable" label="标签" width="150" />
-      <el-table-column prop="pub_date" label="发布日期" width="90" />
+      <el-table-column prop="pub_date" label="编辑日期" sortable width="90" />
       <el-table-column prop="username" label="作者" width="80" />
       <el-table-column prop="is_delete" label="状态" width="70">
         <template v-slot="scope">

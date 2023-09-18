@@ -1,4 +1,5 @@
-import './assets/css/main.css'
+import '@/assets/css/main.css'
+import '@/assets/ts/TextLog'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

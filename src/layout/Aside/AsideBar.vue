@@ -60,8 +60,7 @@ const menuArray = [
     icon: User,
     groupTitle: '管理',
     children: [
-      { name: '用户列表', path: '/controlPanel/UserList' }, // 分别展示 用户 和 管理员
-      { name: '权限管理', path: '/controlPanel/Rmanagement' }, // 对用户分权
+      { name: '用户信权', path: '/controlPanel/UserList' }, // 分别展示 用户 和 管理员
     ],
   },
   {
@@ -71,10 +70,7 @@ const menuArray = [
     children: [
       { name: '文章统计', path: '/controlPanel/ArticleCount' }, // 展示所有文章数目图\文章点赞数最高 评论最多等等数据 图
       { name: '用户统计', path: '/controlPanel/UserCount' }, // 展示所有用户分布图
-      { name: '访问量统计', path: '/controlPanel/VisitCount' },// 展示网站访问量图
-      { name: '用户活跃度', path: '/controlPanel/UserActivity' },// 展示用户活跃状态图
-      { name: '用户设备统计', path: '/controlPanel/EquipmentCount' },// 展示用户使用的设备 宽高大小 设备显示密度 统计图
-      { name: '用户来源统计', path: '/controlPanel/sourceCount' },// 展示用户来源分布图
+      { name: '来源统计', path: '/controlPanel/sourceCount' },// 展示用户来源分布图
     ],
   },
   {

@@ -6,7 +6,7 @@ import router from '@/router'
 
 // 创建axios实例
 const request = axios.create({
-  baseURL: '',
+  baseURL: 'http://192.168.0.103:666/api',
   timeout: 5000
 })
 
@@ -28,6 +28,7 @@ request.interceptors.request.use(config => {
 // axios响应式拦截器
 request.interceptors.response.use(response => {
   const { data: res } = response
+  if (res.message === false) return response
   if (res.status !== 200) {
     // 在需要显示通知的地方调用函数
     ElNotification({
@@ -36,14 +37,10 @@ request.interceptors.response.use(response => {
       type: 'warning',
       duration: 1500
     })
-    if (res.status === 401 || res.status === 404) {
-      localStorage.removeItem('token')
-      router.push('/')
-    }
   } else {
     ElMessage.success({
       message: res.message,
-      duration: 500
+      duration: 1500
     })
   }
   return response

@@ -1,6 +1,6 @@
 <template>
   <div class="UserCardItemArea">
-    <el-descriptions class="UserCard" :column="3" :size="size" border>
+    <el-descriptions class="UserCard" :column="4" :size="size" border>
       <template #title>
         <div class="custom-title">
           <div class="UserImag">
@@ -9,8 +9,11 @@
           <span class="userName">{{ data.username }}</span>
         </div>
       </template>
-      <template #extra>
-        <el-button type="primary">编辑用户信息</el-button>
+      <template #extra v-if="module === 'list'">
+        <el-button type="primary" @click="EditorUserData">编辑用户信息</el-button>
+      </template>
+      <template #extra v-else>
+        <el-button type="primary" @click="ChangeModule">修改权限</el-button>
       </template>
       <el-descriptions-item>
         <template #label>
@@ -49,28 +52,6 @@
         <template #label>
           <div class="cell-item">
             <el-icon :style="iconStyle">
-              <location />
-            </el-icon>
-            城市
-          </div>
-        </template>
-        {{ data.city }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          <div class="cell-item">
-            <el-icon :style="iconStyle">
-              <Burger />
-            </el-icon>
-            生日
-          </div>
-        </template>
-        {{ data.birthday }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template #label>
-          <div class="cell-item">
-            <el-icon :style="iconStyle">
               <Male />
             </el-icon>
             性别
@@ -82,7 +63,7 @@
         <template #label>
           <div class="cell-item">
             <el-icon :style="iconStyle">
-              <Male />
+              <Calendar />
             </el-icon>
             注册日期
           </div>
@@ -108,7 +89,7 @@
 <script setup lang="ts">
 import {
   Iphone,
-  Location,
+  Calendar,
   Postcard,
   Tickets,
   User,
@@ -119,21 +100,18 @@ const size = ref('')
 const props = defineProps<{
   data: {
     birthday: string,
-    city: string,
     email: string,
-    id: number
-    nickname: string,
     registerDate: number,
     sex: string,
-    state: number,
     user_content: string,
     user_id: string,
     user_pic: string,
     useridentity: string,
-    username: string,
+    username: string
   },
+  module: 'list' | 'power'
 }>();
-
+const emit = defineEmits(['closePanel', 'openPanel'])
 const iconStyle = computed(() => {
   const marginMap: any = {
     large: '8px',
@@ -144,6 +122,14 @@ const iconStyle = computed(() => {
     marginRight: marginMap[size.value] || marginMap.default,
   }
 })
+// 打开编辑面板
+const EditorUserData = () => {
+  emit('openPanel', props.data.username)
+}
+const ChangeModule = () => {
+  alert(111)
+}
+// 计算注册日期
 const registerDateCount = computed(() => {
   const milliseconds = props.data.registerDate;
   const date = new Date(milliseconds);
@@ -153,6 +139,7 @@ const registerDateCount = computed(() => {
   const formattedDate = `${year}-${month}-${day}`;
   return formattedDate
 })
+// 计算注册天数
 const registerDay = computed(() => {
   const targetDate: number = props.data.registerDate
   const currentDate = new Date(); // 获取当前日期和时间
@@ -171,6 +158,11 @@ const registerDay = computed(() => {
 
 /deep/.el-descriptions__header {
   margin: 0;
+}
+
+/deep/.el-descriptions__cell {
+  width: 120px;
+  max-width: 200px;
 }
 
 .UserCard {

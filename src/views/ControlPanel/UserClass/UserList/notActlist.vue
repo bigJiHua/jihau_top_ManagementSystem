@@ -34,15 +34,15 @@ let isEditor = ref(false)
 let User = ref('')
 // 获取用户列表
 const GetUserListData = async (Num: number) => {
-  const { data: res } = await GetUserList.getUserList(Num, 'deleteUser')
+  const { data: res } = await GetUserList.getUserList(Num, 'notact')
   UserList = res.data
   total.value = res.totalNum
 }
 
-// 搜索文章
+// 搜索用户
 const searchUserData = async () => {
   if (searchKey.value.trim() !== '') {
-    const { data: res } = await SearchAPI.search(searchKey.value, 'deleteUser')
+    const { data: res } = await SearchAPI.search(searchKey.value, 'notact')
     UserList = res.data
     searchKey.value = ''
   } else {
@@ -70,7 +70,7 @@ const openPanel = (user: string) =>{
   isEditor.value = true
   User.value = user
 }
-// 关闭面板
+// 开启面板
 const closePanel = () =>{
   isEditor.value = false
 }

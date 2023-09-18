@@ -26,9 +26,9 @@ const cagUAData = (reason: string, data: string,type:string) => {
   params.append('type', type) // 数据
   return request.post('/Ctrl/cagUAData', params)
 }
-// 文章列表---搜索文章
+// 后台管理面板全能搜索API
 const search = (key: string | number, type: string) => {
-  return request.get('/Ctrl/searchArticle?key=' + key + '&type=' + type)
+  return request.get('/Ctrl/ctrlSearch?key=' + key + '&type=' + type)
 }
 
 /*
