@@ -21,6 +21,9 @@
       <el-input v-model="editorData.lable" placeholder="请输入">
         <template #prepend>标签：</template>
       </el-input>
+      <el-input v-model="editorData.describes" placeholder="请输入">
+        <template #prepend>描述:</template>
+      </el-input>
       <el-input v-model="editorData.keyword" placeholder="请输入">
         <template #prepend>关键词:</template>
       </el-input>
@@ -39,7 +42,9 @@
       </p>
     </aside>
     <div id="EditorArea">
-      <Cekditor :content="editorData.content" v-highlight @cagEditorData="cagEditorData"></Cekditor>
+      <Cekditor v-if="!isMd" :content="editorData.content" v-highlight @cagEditorData="cagEditorData"></Cekditor>
+      <MdEditor v-if="isMd && isShow" :type="'cag'" :content="editorData.content" @cagEditorData="cagEditorData">
+      </MdEditor>
     </div>
   </div>
 </template>
@@ -53,7 +58,10 @@ import useELTips from '@/Hooks/ElMessageBoxTips'
 import useLocalStorage from '@/Hooks/useLocalStorage'
 import GetArticleData from '@/utils/API/ArticleClass'
 import Cekditor from '@/components/Cekditor/index.vue'
+import MdEditor from '@/components/MdEditor/index.vue'
 const router = useRouter()
+const isMd = ref(false)
+const isShow = ref(false)
 const editorData = ref({
   content: '',
   title: '',
@@ -62,7 +70,8 @@ const editorData = ref({
   pub_date: '',
   username: '',
   read_num: '',
-  cover_img: ''
+  cover_img: '',
+  describes: ''
 })
 // 这里存储文章的源数据
 let newArticleData = reactive({
@@ -73,7 +82,8 @@ let newArticleData = reactive({
   pub_date: '',
   username: '',
   read_num: '',
-  cover_img: ''
+  cover_img: '',
+  describes: ''
 })
 const isChange = ref(false)
 let reason = ref('')
@@ -82,6 +92,9 @@ let EditorArticleID = ref('')
 
 // 获取文章如果有Id的话
 const getArticleData = async (id: string) => {
+  isMd.value = false
+  isShow.value = false
+  if (/\bmd[A-Z0-9]+\b/g.test(id)) isMd.value = true
   if (!id) {
     ElMessage.error('ID不能为空！')
     return
@@ -96,6 +109,9 @@ const getArticleData = async (id: string) => {
   editorData.value = res.data.article
   Object.assign(newArticleData, editorData.value)
   EditorArticleID.value = ''
+  if (res.data.article) {
+    isShow.value = true
+  }
 }
 // 暂存
 const TemStorage = () => {
@@ -124,6 +140,9 @@ const cagEditorData = (cagData: string) => {
 const UpChangeArticleData = async () => {
   if (isChangeArticle(newArticleData, editorData.value)) {
     if (reason.value !== '') {
+      if (isMd.value) editorData.value.content = JSON.stringify({
+        data: editorData.value.content
+      })
       const upData = JSON.stringify(useLocalStorage.getRandomSubstring(useLocalStorage.getLoc('token', false), JSON.stringify(editorData.value)))
       const { data: res } = await GetArticleData.cagUAData(reason.value, upData, 'article')
       if (res.status === 200) {
@@ -138,7 +157,7 @@ const UpChangeArticleData = async () => {
 }
 // 取消编辑
 const Unstage = async () => {
-  if (await useELTips.WarningTips('确定要取消编辑吗？你可以选择暂存待会再看看！') === 'true') {
+  if (await useELTips('确定要取消编辑吗？你可以选择暂存待会再看看！')) {
     router.back()
   }
 }
@@ -171,7 +190,7 @@ const isChangeArticle = (obj1: any, obj2: any) => {
 onMounted(async () => {
   const ArticleID = router.currentRoute.value.params.articleid as string
   if (localStorage.getItem('TemStorageA')) {
-    if (await useELTips.WarningTips('上次还有保存的数据哟！要继续编辑吗？') === 'true') {
+    if (await useELTips('上次还有保存的数据哟！要继续编辑吗？')) {
       const TemStorageData = JSON.parse(localStorage.getItem('TemStorageA') as string)
       editorData.value = TemStorageData
       newArticleData = TemStorageData
@@ -187,7 +206,7 @@ onMounted(async () => {
 // 在组件销毁之前执行的操作
 onBeforeUnmount(async () => {
   if (localStorage.getItem('TemStorageA')) {
-    if (await useELTips.WarningTips('检测到本地有暂存，还未提交，需要保留吗？') !== 'true') {
+    if (!await useELTips('检测到本地有暂存，还未提交，需要保留吗？')) {
       localStorage.removeItem('TemStorageA')
       ElMessage.warning('暂存已删除')
     }

@@ -67,7 +67,7 @@ const getArticle = async () => {
 }
 // 选择文章状态并改变
 const recoverPage = async () => {
-  if (await useELTips.WarningTips('你确定要恢复吗？') === 'true') {
+  if (await useELTips('你确定要恢复吗？')) {
     const { data: res } = await getArticleAPI.getRecycleList(props.ArticleId, props.type, 'recover')
     if (res.status === 200) {
       close()
@@ -76,7 +76,7 @@ const recoverPage = async () => {
 }
 // 删除该文章
 const deletePage = async () => {
-  if (await useELTips.WarningTips('你真的要删除这篇文章？') === 'true') {
+  if (await useELTips('你真的要删除这篇文章？')) {
     const { data: res } = await getArticleAPI.getRecycleList(props.ArticleId, props.type, 'delete')
     if (res.status === 200) {
       close()

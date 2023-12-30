@@ -120,7 +120,7 @@ const cagUserPower = async (type: string) => {
     default:
       return
   }
-  if (await useELTips.WarningTips(sandMessage) === 'true') {
+  if (await useELTips(sandMessage)) {
     if (type !== 'power') {
       try {
         await getActDataAPI.ChangeUserPower(props.UserID, 'cag', data)

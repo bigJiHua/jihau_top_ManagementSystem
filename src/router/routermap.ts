@@ -64,32 +64,32 @@ const RouterMap = [
       {
         path: 'ArticleCount',
         name: '文章统计',
-        component:  () => import('@/views/ControlPanel/DataCountClass/ArticleCount.vue')
+        component:  () => import('@/views/ControlPanel/DataCountClass/ArticleCount/index.vue')
       },{
         path: 'UserCount',
         name: '用户统计',
-        component:  () => import('@/views/ControlPanel/DataCountClass/UserCount.vue')
+        component:  () => import('@/views/ControlPanel/DataCountClass/UserCount/index.vue')
       },{
         path: 'sourceCount',
-        name: 'sourceCount',
-        component:  () => import('@/views/ControlPanel/DataCountClass/sourceCount.vue')
+        name: '来源统计',
+        component:  () => import('@/views/ControlPanel/DataCountClass/sourceCount/index.vue')
       },
       // 设置SystemSettingClass
       {
         path: 'Carousel',
-        name: 'Carousel',
+        name: '轮播图',
         component:  () => import('@/views/ControlPanel/SystemSettingClass/Carousel.vue')
       },{
         path: 'FriendChain',
-        name: 'FriendChain',
+        name: '友链',
         component:  () => import('@/views/ControlPanel/SystemSettingClass/FriendChain.vue')
       },{
         path: 'SiteSetting',
-        name: 'SiteSetting',
+        name: '站点设置',
         component:  () => import('@/views/ControlPanel/SystemSettingClass/SiteSetting.vue')
       },{
         path: 'SiteRun',
-        name: 'SiteRun',
+        name: '站点运行图',
         component:  () => import('@/views/ControlPanel/SystemSettingClass/SiteRun.vue')
       },
     ]

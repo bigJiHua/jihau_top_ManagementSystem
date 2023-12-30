@@ -11,7 +11,7 @@
       style="width: 100%; height: calc(100% - 80px); overflow-x: auto;" stripe>
       <el-table-column fixed prop="article_id" label="文章ID" width="80">
         <template v-slot="scope">
-          <a :href="`https://jihau.top/page/` + scope.row.notify_id" target="_blank" class="defalut_a_black articleId">
+          <a :href="`https://jihau.top/notify/` + scope.row.notify_id" target="_blank" class="defalut_a_black articleId">
             {{ scope.row.notify_id }}
           </a>
         </template>

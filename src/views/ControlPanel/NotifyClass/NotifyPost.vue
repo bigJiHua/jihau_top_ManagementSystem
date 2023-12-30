@@ -178,7 +178,7 @@ const PostNotifyData = async () => {
   if (!isCheck(editorData.value.content) && !isCheck(editorData.value.title) && !isCheck(editorData.value.lable) && !isCheck(editorData.value.keyword)) {
     ElMessage.warning('内容空空，务必确保你的通知名、标签、关键词完整！')
   } else {
-    if (await useELTips.WarningTips('你确定要发布该通知吗？') === 'true') {
+    if (await useELTips('你确定要发布该通知吗？')) {
       editorData.value.state = 0
       const { data: res } = await GetArticleData.postNotify(editorData.value, postID)
       if (res.status === 200) {
@@ -200,7 +200,7 @@ function isCheck(value: string) {
 }
 // 取消发布
 const Unstage = async () => {
-  if (await useELTips.WarningTips('确定要取消编辑吗？你可以选择暂存待会再看看！') === 'true') {
+  if (await useELTips('确定要取消编辑吗？你可以选择暂存待会再看看！')) {
     useLocalStorage.remLoc('TemStorageN')
     router.back()
   }
@@ -217,7 +217,7 @@ const isShowAside = () => {
 // 加载时获取 ID？ 或者自动保存
 onMounted(async () => {
   if (localStorage.getItem('TemStorageN')) {
-    if (await useELTips.WarningTips('上次还有保存的数据哟！要继续编辑吗？') === 'true') {
+    if (await useELTips('上次还有保存的数据哟！要继续编辑吗？')) {
       const TemStorageData = JSON.parse(localStorage.getItem('TemStorageN') as string)
       editorData.value = TemStorageData
       ElMessage.success('当前显示的是暂存的内容！')
@@ -230,7 +230,7 @@ onMounted(async () => {
 // 文章不为空且没按提交按钮
 onBeforeUnmount(async () => {
   if (localStorage.getItem('TemStorageA')) {
-    if (await useELTips.WarningTips('检测到本地有暂存，还未提交，需要保留吗？') !== 'true') {
+    if (await useELTips('检测到本地有暂存，还未提交，需要保留吗？')) {
       localStorage.removeItem('TemStorageN')
       ElMessage.warning('暂存已删除')
     }

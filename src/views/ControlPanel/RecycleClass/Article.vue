@@ -74,7 +74,7 @@ async function GetArticleListData() {
 
 // 删除该文章
 const deletePage = async (id:string | number) => {
-  if (await useELTips.WarningTips('你真的要删除这篇文章？') === 'true') {
+  if (await useELTips('你真的要删除这篇文章？')) {
     const { data: res } = await getArticleAPI.getRecycleList(id, 'article', 'delete')
     if (res.status === 200) {
       GetArticleListData()

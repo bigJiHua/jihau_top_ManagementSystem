@@ -336,7 +336,7 @@ const ChangeUserDataFunc = async (type: string) => {
       default:
         return;
     }
-    const confirmed = await useELTips.WarningTips(confirmationMessage) === 'true';
+    const confirmed = await useELTips(confirmationMessage)
     // 如果没有确认，则返回
     if (!confirmed) {
       return;
@@ -344,7 +344,7 @@ const ChangeUserDataFunc = async (type: string) => {
     // 使用GetUserData.ChangeUserData方法修改用户数据
     await GetUserData.ChangeUserData(cagUserData.value.user_id, reqtype, data);
   } else {
-    if (await useELTips.WarningTips('你确定要注销该用户吗？') === 'true') {
+    if (await useELTips('你确定要注销该用户吗？')) {
       reqtype = 'deluser'
       // 使用GetUserData.ChangeUserData方法修改用户数据
       await GetUserData.ChangeUserData(cagUserData.value.user_id, reqtype, data);

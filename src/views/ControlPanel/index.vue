@@ -32,7 +32,7 @@ import { RouterView } from 'vue-router';
   display: none;
 }
 .MenuContenArea {
-  background-color: blueviolet;
+  background-color: rgba(215, 222, 255, 0.368);
   padding: 0 5px;
 }
 </style>

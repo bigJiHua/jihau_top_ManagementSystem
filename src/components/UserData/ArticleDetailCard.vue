@@ -6,7 +6,8 @@
     <div class="rightContentArea">
       <header>
         <!-- TODO 这里路径目前在测试，上线时需要重新修改 -->
-        <h3>标题：<a class="defalut_a_black" :href="`http://localhost:8080/article/${data.article_id}`">{{ data.title }}</a></h3>
+        <h3>标题：<a class="defalut_a_black" :href="`http://localhost:8080/article/${data.article_id}`">{{ data.title }}</a>
+        </h3>
       </header>
       <div class="content">
         <p>{{ displayContent }}</p>
@@ -38,13 +39,13 @@ const props = defineProps<{
   user: string
 }>()
 
-      
+
 // 申明对父组件操作
 const emit = defineEmits(['GetnewListData'])
 // 删除用户评论
 const DeleteData = async () => {
   // /users/delact?id=88&username=JiHua&article_id=YGYG88
-  if (await useELTips.WarningTips('你确定要删除该用户此条评论吗？') === 'true') {
+  if (await useELTips('你确定要删除该用户此条评论吗？')) {
     const { data: res } = await deleteCommentAPI.deleteUserComment(props.data.id, props.user, props.data.article_id)
     if (res.status === 200) {
       emit('GetnewListData')

@@ -42,8 +42,7 @@
       <el-table-column fixed="right" label="操作" width="120">
         <template #default="scope">
           <el-button link type="primary" size="small" @click="ArticleDetail(scope.row.article_id)">详细</el-button>
-          <el-button link type="primary" size="small"
-            @click="ArticleEdit(scope.row.article_id)">编辑</el-button>
+          <el-button link type="primary" size="small" @click="ArticleEdit(scope.row.article_id)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -74,17 +73,14 @@ let total = ref(store.getTotalNum)
 let ArticleId: string = ''
 let isTrue: boolean = false
 const searchKey = ref('')
-let nowPagenum = 1
+let nowPagenum = ref(1)
+const isSearch = ref(false)
 // 方法
-async function GetArticleListData(GetNum: number) {
+const GetArticleListData = async (GetNum: number) => {
   const { data: res } = await ArticleRequest.getDataList(GetNum, 'article')
   store.increment(res.data)
   store.intotalNum(res.totalNum)
 }
-// DELETE
-// setInterval(()=>{
-//   GetArticleListData(1)
-// },800)
 // 展开细节Panel
 const ArticleDetail = (article_id: string) => {
   isDetail.value = true
@@ -94,7 +90,7 @@ const ArticleDetail = (article_id: string) => {
 // 关闭Panel
 const closePanel = () => {
   isDetail.value = false
-  GetArticleListData(nowPagenum)
+  GetArticleListData(nowPagenum.value)
 }
 // 编辑跳转
 const ArticleEdit = (article_id: string) => {
@@ -106,17 +102,17 @@ function isSameData(data1: any[], data2: any[]) {
 // 上一页
 const prevNum = (num: number) => {
   GetArticleListData(num)
-  nowPagenum = num
+  nowPagenum.value = num
 }
 // 数字
 const pagerNum = (num: number) => {
   GetArticleListData(num)
-  nowPagenum = num
+  nowPagenum.value = num
 }
 // 下一页
 const nextNum = (num: number) => {
   GetArticleListData(num)
-  nowPagenum = num
+  nowPagenum.value = num
 }
 const isNonEmptyString = (key: string): boolean => {
   const trimmedInput = key.trim();
@@ -128,17 +124,16 @@ const searchArticleData = async () => {
     const { data: res } = await ArticleRequest.search(searchKey.value, 'article')
     ArticleData.data = res.data
     searchKey.value = ''
+    isSearch.value = true
   } else {
     ElMessage.error('关键词不能为空！')
-    GetArticleListData(1)
-    nowPagenum = 1
+    GetArticleListData(nowPagenum.value)
   }
 }
 // 在组件挂载时获取文章列表数据
 onMounted(() => {
   if (store.getStoreArticleListData.length === 0) {
-    GetArticleListData(1)
-    nowPagenum = 1
+    GetArticleListData(nowPagenum.value)
   }
 })
 // 监听属性
@@ -164,12 +159,6 @@ const CountDeleteCode = computed(() => {
     }
   }
 })
-const ArticleCate = computed(() => {
-  return (articleState: string) => {
-    return articleState === 'article' ? '文章' : '通知'
-  }
-})
-
 </script>
 
 <style lang="less" scoped>

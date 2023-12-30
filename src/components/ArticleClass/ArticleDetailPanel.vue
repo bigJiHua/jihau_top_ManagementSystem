@@ -14,7 +14,8 @@
         <div class="ArticleShowAreaBox">
           <!-- 内容渲染区 -->
           <div class="content">
-            <p v-html="ArticleData.data.article.content" v-highlight style="word-wrap: break-word;"></p>
+            <p v-if="!isMd" v-html="ArticleData.data.article.content" v-highlight style="word-wrap: break-word;"></p>
+            <mdView v-if="isMd && isShow" :content="ArticleData.data.article.content"></mdView>
           </div>
           <!-- 留言区 -->
           <div class="commentArea" v-if="ArticleData.data.comment.length">
@@ -68,6 +69,7 @@ import ArticleRequest from "@/utils/API/ArticleClass"
 import useELTips from '@/Hooks/ElMessageBoxTips'
 import { onMounted, reactive, ref } from "vue";
 import { ElMessage } from 'element-plus'
+import mdView from '@/components/MdEditor/mdView.vue'
 // 申明对父组件操作
 const emit = defineEmits(['closePanel'])
 const props = defineProps<{
@@ -75,7 +77,9 @@ const props = defineProps<{
   isTrue: boolean,
   type: string
 }>();
-let isDeleteCommentBtn = ref(false)
+const isMd = ref(false)
+const isShow = ref(false)
+const isDeleteCommentBtn = ref(false)
 const ArticleData = reactive({
   data: {
     article: {
@@ -105,11 +109,11 @@ class PutDataClass {
   articleId: string = ''
   func: string = ''
 }
-
 // 关闭组件 物理操作
 function close() {
   emit('closePanel')
 }
+// 删评论按钮
 function ShowDeleteBtn() {
   if (ArticleData.data.comment.length !== 0) {
     isDeleteCommentBtn.value = !isDeleteCommentBtn.value
@@ -119,12 +123,18 @@ function ShowDeleteBtn() {
 }
 // 获取文章
 const getArticle = async () => {
+  isMd.value = false
+  if (/\bmd[A-Z0-9]+\b/g.test(String(props.ArticleId))) isMd.value = true
   const { data: res } = await ArticleRequest.getDetail(String(props.ArticleId), props.type)
   ArticleData.data = res.data
+  isShow.value = false
+  if (res.data) {
+    isShow.value = true
+  }
 }
 // 删除留言
 const deleteComment = async (username: string, commentId: number | string) => {
-  if (await useELTips.WarningTips('你确定要删除这条评论吗？') === 'true') {
+  if (await useELTips('你确定要删除这条评论吗？')) {
     const delCommentPutData = new PutDataClass();
     delCommentPutData.cagUserName = username
     delCommentPutData.articleId = String(commentId)
@@ -137,7 +147,7 @@ const deleteComment = async (username: string, commentId: number | string) => {
 }
 // 选择文章状态并改变
 const selectAction = async (selectValue: string) => {
-  if (await useELTips.WarningTips('你确定要改变文章状态吗？') === 'true') {
+  if (await useELTips('你确定要改变文章状态吗？')) {
     const selectActionPutData = new PutDataClass();
     selectActionPutData.cagUserName = ArticleData.data.article.username
     selectActionPutData.articleId = props.ArticleId
@@ -147,7 +157,7 @@ const selectAction = async (selectValue: string) => {
 }
 // 删除该文章
 const deleteArticle = async (articleId: string | number) => {
-  if (await useELTips.WarningTips('你真的要删除这篇文章？') === 'true') {
+  if (await useELTips('你真的要删除这篇文章？')) {
     const delArticlePutData = new PutDataClass();
     delArticlePutData.cagUserName = ArticleData.data.article.username
     delArticlePutData.articleId = String(articleId)

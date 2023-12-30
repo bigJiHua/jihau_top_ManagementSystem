@@ -27,6 +27,7 @@ const ChangeUserData = (id: string, type: string, data: object) => {
   params.append('type' , type)
   return request.patch('/Ctrl/cagUsers', params)
 }
+// 修改用户权限
 const ChangeUserPower = (user: string, type: string, data: any) => {
   const params = new URLSearchParams()
   params.append('data' , JSON.stringify(data))

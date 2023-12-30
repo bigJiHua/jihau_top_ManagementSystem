@@ -78,8 +78,8 @@ async function GetNotifyListData() {
 }
 
 // 删除该文章
-const deletePage = async (id:string | number) => {
-  if (await useELTips.WarningTips('你真的要删除这篇文章？') === 'true') {
+const deletePage = async (id: string | number) => {
+  if (await useELTips('你真的要删除这篇文章？')) {
     const { data: res } = await getNotifyAPI.getRecycleList(id, 'notify', 'delete')
     if (res.status === 200) {
       GetNotifyListData()

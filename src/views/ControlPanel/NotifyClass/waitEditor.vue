@@ -60,7 +60,7 @@ import { useRouter } from "vue-router"
 import { ElMessage } from "element-plus";
 // 数据定义 
 const store = useArticleDataStore()
-let ArticleData = reactive({ data: '' })
+let ArticleData = reactive({ data: [] })
 let router = useRouter()
 let total = ref(0)
 const searchKey = ref('')
@@ -115,7 +115,7 @@ watch(
   ], // 新值                        旧值
   ([newArticleData, newTotalNum], [oldArticleData, oldTotalNum]) => {
     if (!isSameData(ArticleData.data, newArticleData)) {
-      ArticleData.data = newArticleData;
+      ArticleData.data = newArticleData as [];
     }
     total.value = newTotalNum
   }

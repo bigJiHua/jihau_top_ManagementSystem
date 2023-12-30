@@ -49,7 +49,7 @@
         <p>
           ⚠：没有内容？请输入对应通知ID进行编辑
         </p>
-        <h3 style="color: red;" v-if="editorData.state">当前编辑的通知为待发布，如要发布请选择    发布状态 的选项</h3>
+        <h3 style="color: red;" v-if="editorData.state">当前编辑的通知为待发布，如要发布请选择 发布状态 的选项</h3>
       </aside>
       <div id="EditorArea">
         <Cekditor :content="editorData.content" v-highlight @cagEditorData="cagEditorData"></Cekditor>
@@ -174,7 +174,7 @@ const UpChangeArticleData = async () => {
 }
 // 取消编辑
 const Unstage = async () => {
-  if (await useELTips.WarningTips('确定要取消编辑吗？你可以选择暂存待会再看看！') === 'true') {
+  if (await useELTips('确定要取消编辑吗？你可以选择暂存待会再看看！')) {
     router.back()
   }
 }
@@ -206,7 +206,7 @@ const isChangeArticle = (obj1: any, obj2: any) => {
 }
 onMounted(async () => {
   if (localStorage.getItem('TemStorageN')) {
-    if (await useELTips.WarningTips('上次还有保存的数据哟！要继续编辑吗？') === 'true') {
+    if (await useELTips('上次还有保存的数据哟！要继续编辑吗？')) {
       const TemStorageData = JSON.parse(localStorage.getItem('TemStorageN') as string)
       editorData.value = TemStorageData
       newArticleData = TemStorageData
@@ -222,7 +222,7 @@ onMounted(async () => {
 // 在组件销毁之前执行的操作
 onBeforeUnmount(async () => {
   if (localStorage.getItem('TemStorageN')) {
-    if (await useELTips.WarningTips('检测到本地有暂存，还未提交，需要保留吗？') !== 'true') {
+    if (!await useELTips('检测到本地有暂存，还未提交，需要保留吗？')) {
       localStorage.removeItem('TemStorageN')
       ElMessage.warning('暂存已删除')
     }
@@ -349,6 +349,7 @@ onBeforeUnmount(async () => {
 .cke_chrome {
   padding: 0;
 }
+
 .SelectBox {
   margin-top: 10px;
 }
