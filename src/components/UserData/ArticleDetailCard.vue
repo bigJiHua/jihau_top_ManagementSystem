@@ -6,7 +6,7 @@
     <div class="rightContentArea">
       <header>
         <!-- TODO 这里路径目前在测试，上线时需要重新修改 -->
-        <h3>标题：<a class="defalut_a_black" :href="`http://localhost:8080/article/${data.article_id}`">{{ data.title }}</a>
+        <h3>标题：<a class="defalut_a_black" :href="`http://test.020907.xyz/article/${data.article_id}`">{{ data.title }}</a>
         </h3>
       </header>
       <div class="content">

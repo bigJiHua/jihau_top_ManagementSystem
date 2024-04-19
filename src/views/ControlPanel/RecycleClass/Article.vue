@@ -151,7 +151,7 @@ const ArticleCate = computed(() => {
   padding: 5px;
 }
 
-/deep/.el-table__cell {
+:deep(.el-table__cell) {
   text-align: center;
 }
 

@@ -6,15 +6,16 @@ import gemoji from '@bytemd/plugin-gemoji'
 import breaks from '@bytemd/plugin-breaks'
 import footnotes from '@bytemd/plugin-footnotes'
 import mediumZoom from '@bytemd/plugin-medium-zoom'
-import zhHans from "bytemd/locales/zh_Hans.json"
-import { Editor, Viewer } from '@bytemd/vue-next'
+import zhHans from 'bytemd/locales/zh_Hans.json'
+// @ts-ignore
+import { Editor } from '@bytemd/vue-next'
 import 'juejin-markdown-themes/dist/juejin.min.css'
 import 'highlight.js/styles/monokai-sublime.css'
 import 'bytemd/dist/index.css'
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue'
 const emit = defineEmits(['cagEditorData'])
 const props = defineProps<{
-  content: string,
+  content: string
   type: string
 }>()
 // 渲染md的插件
@@ -25,7 +26,7 @@ const plugins = ref([
   frontmatter(),
   breaks(),
   footnotes(),
-  mediumZoom()
+  mediumZoom(),
 ])
 const mdContent = ref('')
 const handleChange = (v: string) => {
@@ -53,7 +54,13 @@ onMounted(() => {
 })
 </script>
 <template>
-  <Editor class="mdEditor" :locale="zhHans" :value="mdContent" :plugins="plugins" @change="handleChange" />
+  <Editor
+    class="mdEditor"
+    :locale="zhHans"
+    :value="mdContent"
+    :plugins="plugins"
+    @change="handleChange"
+  ></Editor>
 </template>
 
 <style lang="less" scoped>

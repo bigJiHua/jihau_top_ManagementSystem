@@ -11,7 +11,7 @@
       style="width: 100%; height: calc(100% - 80px); overflow-x: auto;" stripe>
       <el-table-column fixed prop="article_id" label="文章ID" width="70">
         <template v-slot="scope">
-          <a :href="`https://jihau.top/article/` + scope.row.article_id" target="_blank"
+          <a :href="`http://test.020907.xyz/article/` + scope.row.article_id" target="_blank"
             class="defalut_a_black articleId">
             {{ scope.row.article_id }}
           </a>
@@ -90,7 +90,7 @@ const ArticleDetail = (article_id: string) => {
 // 关闭Panel
 const closePanel = () => {
   isDetail.value = false
-  GetArticleListData(nowPagenum.value)
+  // GetArticleListData(nowPagenum.value)
 }
 // 编辑跳转
 const ArticleEdit = (article_id: string) => {
@@ -155,7 +155,7 @@ const CountDeleteCode = computed(() => {
     if (parseInt(is_delete) === 0 && parseInt(state) === 0) {
       return '已发布正常'
     } else if (parseInt(is_delete) === 0 && parseInt(state) === 1) {
-      return '已恢复待发布'
+      return '已驳回待发布'
     }
   }
 })
@@ -190,7 +190,7 @@ const CountDeleteCode = computed(() => {
   padding: 5px;
 }
 
-/deep/.el-table__cell {
+:deep(.el-table__cell) {
   text-align: center;
 }
 

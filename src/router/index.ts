@@ -6,7 +6,8 @@ import { ElNotification } from 'element-plus'
 // 导入element-plus插件
 // layout 布局
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),//TODO 生产环境需要修改为/admin/ import.meta.env.BASE_URL
+  //TODO 生产环境需要修改为/admin/ 本地默认：import.meta.env.BASE_URL
+  history: createWebHistory('/'),
   routes: RouterMap
 })
 // 创建路由前置操作

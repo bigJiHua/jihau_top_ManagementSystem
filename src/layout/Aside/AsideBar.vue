@@ -9,7 +9,8 @@
           <span>{{ menuItem.name }}</span>
         </template>
         <el-menu-item-group :title="menuItem.groupTitle">
-          <el-menu-item v-for="(childItem, childIndex) in menuItem.children" :key="childIndex" :index="`${index + 1}-${childIndex + 1}`">
+          <el-menu-item v-for="(childItem, childIndex) in menuItem.children" :key="childIndex"
+            :index="`${index + 1}-${childIndex + 1}`">
             <RouterLink :to="childItem.path" class="defalut_a_black routerLink">{{ childItem.name }}</RouterLink>
           </el-menu-item>
         </el-menu-item-group>
@@ -26,7 +27,8 @@ import {
   User,
   TrendCharts,
   MessageBox,
-  Delete
+  Delete,
+  Message
 } from '@element-plus/icons-vue'
 const menuArray = [
   {
@@ -37,17 +39,26 @@ const menuArray = [
       { name: '文章列表', path: '/controlPanel/ArticleList' }, // 获取所有文章 查阅所有用户的文章
       { name: '文章编辑', path: '/controlPanel/ArticleEditor' }, // 编辑目标文章
     ],
-  },{
+  }, {
     name: '通知管理',
     icon: MessageBox,
+    groupTitle: '公告',
+    children: [
+      { name: '公告列表', path: '/controlPanel/NotifyList' }, // 发布站点通知 公告之类的 Page页面
+      { name: '待发布列表', path: '/controlPanel/waitEditor' }, // 已上传到云端保存的通知 状态为未发布
+      { name: '发布公告', path: '/controlPanel/NotifyPost' }, // 发布站点通知 公告之类的 Page页面
+      { name: '公告编辑', path: '/controlPanel/NotifyEditor' }, // 编辑站点通知 公告之类的 Page页面
+    ],
+  },
+  {
+    name: '站内信',
+    icon: Message,
     groupTitle: '通知',
     children: [
-      { name: '通知列表', path: '/controlPanel/NotifyList' }, // 发布站点通知 公告之类的 Page页面
-      { name: '待发布列表', path: '/controlPanel/waitEditor' }, // 已上传到云端保存的通知 状态为未发布
-      { name: '发布通知', path: '/controlPanel/NotifyPost' }, // 发布站点通知 公告之类的 Page页面
-      { name: '通知编辑', path: '/controlPanel/NotifyEditor' }, // 编辑站点通知 公告之类的 Page页面
+      { name: '全站内信列表', path: '/controlPanel/msglist' }, // 统一发送全站通知
+      { name: '站内信发送', path: '/controlPanel/sysmsg' }, // 统一发送全站通知
     ],
-  },{
+  }, {
     name: '回收站',
     icon: Delete,
     groupTitle: '文章/通知回收站',
@@ -80,6 +91,7 @@ const menuArray = [
     children: [
       { name: '轮播图', path: '/controlPanel/Carousel' }, // 修改首页轮播图
       { name: '友链', path: '/controlPanel/FriendChain' }, // 增删友链
+      { name: '发展历程', path: '/controlPanel/Develop' }, // 增删友链
       { name: '站点设置', path: '/controlPanel/SiteSetting' }, // 是否开启注册等等
       { name: '站点运行图', path: '/controlPanel/SiteRun' }, // 展示站点运行状态
     ],
@@ -92,7 +104,8 @@ const menuArray = [
   display: block;
   width: 100%;
 }
+
 .routerLink:hover {
-  background-color: rgb(236,245,255);
+  background-color: rgb(236, 245, 255);
 }
 </style>

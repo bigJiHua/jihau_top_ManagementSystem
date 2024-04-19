@@ -5,8 +5,8 @@
       <el-button type="primary" class="HeaderItem" size="small" @click="TemStorage">暂存</el-button>
       <el-button type="danger" class="HeaderItem" size="small" @click="Unstage">取消发布</el-button>
       <el-button type="success" class="HeaderItem" size="small" @click="PostNotifyData">发布通知</el-button>
-      <el-button type="primary" class="HeaderItem" size="small" @click="startEditiPost">开始水通知</el-button>
-      <el-button type="danger" class="HeaderItem" size="small" @click="StopEditiPost">关闭水通知</el-button>
+      <!-- <el-button type="primary" class="HeaderItem" size="small" @click="startEditiPost">开始水通知</el-button> -->
+      <!-- <el-button type="danger" class="HeaderItem" size="small" @click="StopEditiPost">关闭水通知</el-button> -->
     </div>
     <div class="EditorAreaBox">
       <aside :class="{
@@ -33,7 +33,7 @@
         </el-input>
       </aside>
       <div id="EditorArea">
-        <Cekditor :content="editorData.content" @cagEditorData="cagEditorData"></Cekditor>
+        <Ckeditor :content="editorData.content" @cagEditorData="cagEditorData"></Ckeditor>
       </div>
     </div>
   </div>
@@ -46,7 +46,7 @@ import { useRouter } from 'vue-router';
 import useELTips from '@/Hooks/ElMessageBoxTips'
 import useLocalStorage from '@/Hooks/useLocalStorage'
 import GetArticleData from '@/utils/API/ArticleClass'
-import Cekditor from '@/components/Cekditor/index.vue'
+import Ckeditor from '@/components/Cekditor/index.vue'
 const router = useRouter()
 const postID = router.currentRoute.value.params.postId as string
 const editorData = ref({
@@ -357,7 +357,7 @@ onBeforeUnmount(async () => {
   margin-top: 10px;
 }
 
-/deep/.el-input-group {
+:deep(.el-input-group) {
   margin-top: 10px;
 }
 </style>

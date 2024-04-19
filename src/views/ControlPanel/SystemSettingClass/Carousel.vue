@@ -135,7 +135,7 @@ onMounted(() => {
   display: none;
 }
 
-/deep/.el-descriptions__title {
+:deep(.el-descriptions__title) {
   width: 100%;
 }
 

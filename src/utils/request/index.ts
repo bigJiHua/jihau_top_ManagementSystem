@@ -6,8 +6,8 @@ import router from '@/router'
 
 // 创建axios实例
 const request = axios.create({
-  baseURL: 'http://192.168.0.103:666/api',
-  timeout: 5000
+  // TODO 上线时修改
+  baseURL: 'http://192.168.0.103/api',
 })
 
 // axios请求拦截器
@@ -58,7 +58,7 @@ request.interceptors.response.use(response => {
     localStorage.removeItem('token')
     router.push('/')
   }
-  return Promise.reject(error)
+  return Promise.reject(error.response)
 })
 
 

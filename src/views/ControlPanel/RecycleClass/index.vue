@@ -29,7 +29,7 @@ const activeName = ref('first')
   overflow: hidden;
   padding: 10px 0;
 }
-/deep/.el-table__cell {
+:deep(.el-table__cell) {
   text-align: center;
 }
 .ListArea {
@@ -40,7 +40,7 @@ const activeName = ref('first')
 .ListArea::-webkit-scrollbar {
   display: none;
 }
-/deep/.el-tabs__header{
+:deep(.el-tabs__header){
   margin: 0;
 }
 </style>

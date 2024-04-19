@@ -11,7 +11,7 @@
       style="width: 100%; height: calc(100% - 80px); overflow-x: auto;" stripe>
       <el-table-column fixed prop="article_id" label="文章ID" width="80">
         <template v-slot="scope">
-          <a :href="`https://jihau.top/notify/` + scope.row.notify_id" target="_blank" class="defalut_a_black articleId">
+          <a :href="`http://test.020907.xyz/notify/` + scope.row.notify_id" target="_blank" class="defalut_a_black articleId">
             {{ scope.row.notify_id }}
           </a>
         </template>
@@ -84,11 +84,7 @@ async function GetArticleListData(GetNum: number) {
   store.inNotifyListData(res.data)
   store.intotalPageNum(res.totalNum)
 }
-// DELETE
-// setInterval(()=>{
-//   GetArticleListData(1)
-// },800)
-// 展开细节Panel
+
 const ArticleDetail = (notify_id: string) => {
   isDetail.value = true
   ArticleId = notify_id
@@ -199,7 +195,7 @@ const whosee = computed(() => {
   padding: 5px;
 }
 
-/deep/.el-table__cell {
+:deep(.el-table__cell) {
   text-align: center;
 }
 

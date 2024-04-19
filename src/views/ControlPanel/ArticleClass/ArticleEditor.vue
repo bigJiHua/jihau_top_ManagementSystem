@@ -1,59 +1,8 @@
-<template>
-  <div class="HeaderBox">
-    <el-input v-model="EditorArticleID" class="HeaderItem" placeholder="输入编辑ID">
-      <template #append>
-        <el-button :icon="Search" @click="getArticleData(EditorArticleID)" />
-      </template>
-    </el-input>
-    <el-button type="primary" class="HeaderItem" size="small" @click="isShowAside">{{ AsideBtn }}</el-button>
-    <el-button type="primary" class="HeaderItem" size="small" @click="TemStorage">暂存</el-button>
-    <el-button type="success" class="HeaderItem" size="small" @click="UpChangeArticleData">提交变更</el-button>
-    <el-button type="danger" class="HeaderItem" size="small" @click="Unstage">取消编辑</el-button>
-  </div>
-  <div class="EditorAreaBox">
-    <aside :class="{
-      cagAside: !isChange,
-      opAside: isChange,
-    }">
-      <el-input v-model="editorData.title" placeholder="请输入">
-        <template #prepend>标题：</template>
-      </el-input>
-      <el-input v-model="editorData.lable" placeholder="请输入">
-        <template #prepend>标签：</template>
-      </el-input>
-      <el-input v-model="editorData.describes" placeholder="请输入">
-        <template #prepend>描述:</template>
-      </el-input>
-      <el-input v-model="editorData.keyword" placeholder="请输入">
-        <template #prepend>关键词:</template>
-      </el-input>
-      <el-input v-model="editorData.cover_img" placeholder="请输入">
-        <template #prepend>封面：</template>
-      </el-input>
-      <el-input v-model="editorData.cover_img">
-        <template #prepend>预览:
-          <img :src="editorData.cover_img" alt="文章封面" class="pvimg" />
-        </template>
-      </el-input>
-      <p>变更任何人的文章都需要变更缘由：</p>
-      <el-input v-model="reason" placeholder="输入缘由，不能为空" clearable />
-      <p>
-        ⚠：没有内容？请输入对应文章ID进行编辑，后台管理面板不支持发布文章，需要登录前台站点后台发布新文章
-      </p>
-    </aside>
-    <div id="EditorArea">
-      <Cekditor v-if="!isMd" :content="editorData.content" v-highlight @cagEditorData="cagEditorData"></Cekditor>
-      <MdEditor v-if="isMd && isShow" :type="'cag'" :content="editorData.content" @cagEditorData="cagEditorData">
-      </MdEditor>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
 import { Search } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus';
-import { useRouter } from 'vue-router';
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
 import useELTips from '@/Hooks/ElMessageBoxTips'
 import useLocalStorage from '@/Hooks/useLocalStorage'
 import GetArticleData from '@/utils/API/ArticleClass'
@@ -71,7 +20,7 @@ const editorData = ref({
   username: '',
   read_num: '',
   cover_img: '',
-  describes: ''
+  describes: '',
 })
 // 这里存储文章的源数据
 let newArticleData = reactive({
@@ -83,7 +32,7 @@ let newArticleData = reactive({
   username: '',
   read_num: '',
   cover_img: '',
-  describes: ''
+  describes: '',
 })
 const isChange = ref(false)
 let reason = ref('')
@@ -102,14 +51,14 @@ const getArticleData = async (id: string) => {
   const { data: res } = await GetArticleData.getDetail(id, 'article')
   if (res.status !== 200) {
     ElMessage.error('文章已经被删除！')
-    router.replace('/controlPanel/ArticleEditor/');
+    router.replace('/controlPanel/ArticleEditor/')
     return
   }
-  router.replace('/controlPanel/ArticleEditor/' + id);
+  router.replace('/controlPanel/ArticleEditor/' + id)
   editorData.value = res.data.article
   Object.assign(newArticleData, editorData.value)
   EditorArticleID.value = ''
-  if (res.data.article) {
+  if (res.status === 200) {
     isShow.value = true
   }
 }
@@ -132,7 +81,7 @@ const cagEditorData = (cagData: string) => {
     ElMessage({
       message: '成功接收变更后的数据',
       duration: 300,
-      type: 'success'
+      type: 'success',
     })
   }
 }
@@ -140,11 +89,21 @@ const cagEditorData = (cagData: string) => {
 const UpChangeArticleData = async () => {
   if (isChangeArticle(newArticleData, editorData.value)) {
     if (reason.value !== '') {
-      if (isMd.value) editorData.value.content = JSON.stringify({
-        data: editorData.value.content
-      })
-      const upData = JSON.stringify(useLocalStorage.getRandomSubstring(useLocalStorage.getLoc('token', false), JSON.stringify(editorData.value)))
-      const { data: res } = await GetArticleData.cagUAData(reason.value, upData, 'article')
+      if (isMd.value)
+        editorData.value.content = JSON.stringify({
+          data: editorData.value.content,
+        })
+      const upData = JSON.stringify(
+        useLocalStorage.getRandomSubstring(
+          useLocalStorage.getLoc('token', false),
+          JSON.stringify(editorData.value)
+        )
+      )
+      const { data: res } = await GetArticleData.cagUAData(
+        reason.value,
+        upData,
+        'article'
+      )
       if (res.status === 200) {
         getArticleData(router.currentRoute.value.params.articleid as string)
       }
@@ -173,16 +132,16 @@ const isShowAside = () => {
 // 对比 是否 有修改差异 obj1是原始数据，obj2是变更数据
 const isChangeArticle = (obj1: any, obj2: any) => {
   //  对象 1 和 2
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
+  const keys1 = Object.keys(obj1)
+  const keys2 = Object.keys(obj2)
   // 比较键值对
   if (keys1.length !== keys2.length) {
-    return true; // 键不同，存在差异
+    return true // 键不同，存在差异
   }
   for (let i = 0; i < keys1.length; i++) {
-    const key = keys1[i];
+    const key = keys1[i]
     if (obj1[key] !== obj2[key]) {
-      return true; // 值不同，存在差异
+      return true // 值不同，存在差异
     }
   }
   return false // 值未变
@@ -191,11 +150,13 @@ onMounted(async () => {
   const ArticleID = router.currentRoute.value.params.articleid as string
   if (localStorage.getItem('TemStorageA')) {
     if (await useELTips('上次还有保存的数据哟！要继续编辑吗？')) {
-      const TemStorageData = JSON.parse(localStorage.getItem('TemStorageA') as string)
+      const TemStorageData = JSON.parse(
+        localStorage.getItem('TemStorageA') as string
+      )
       editorData.value = TemStorageData
       newArticleData = TemStorageData
       ElMessage.success('当前显示的是暂存的内容！')
-      router.replace('/controlPanel/ArticleEditor/' + TemStorageData.article_id);
+      router.replace('/controlPanel/ArticleEditor/' + TemStorageData.article_id)
     } else if (ArticleID) {
       getArticleData(ArticleID)
     }
@@ -206,15 +167,101 @@ onMounted(async () => {
 // 在组件销毁之前执行的操作
 onBeforeUnmount(async () => {
   if (localStorage.getItem('TemStorageA')) {
-    if (!await useELTips('检测到本地有暂存，还未提交，需要保留吗？')) {
+    if (!(await useELTips('检测到本地有暂存，还未提交，需要保留吗？'))) {
       localStorage.removeItem('TemStorageA')
       ElMessage.warning('暂存已删除')
     }
   }
-});
-
+})
 </script>
 
+<template>
+  <div class="HeaderBox">
+    <el-input
+      v-model="EditorArticleID"
+      class="HeaderItem"
+      placeholder="输入编辑ID"
+    >
+      <template #append>
+        <el-button :icon="Search" @click="getArticleData(EditorArticleID)" />
+      </template>
+    </el-input>
+    <el-button
+      type="primary"
+      class="HeaderItem"
+      size="small"
+      @click="isShowAside"
+      >{{ AsideBtn }}</el-button
+    >
+    <el-button
+      type="primary"
+      class="HeaderItem"
+      size="small"
+      @click="TemStorage"
+      >暂存</el-button
+    >
+    <el-button
+      type="success"
+      class="HeaderItem"
+      size="small"
+      @click="UpChangeArticleData"
+      >提交变更</el-button
+    >
+    <el-button type="danger" class="HeaderItem" size="small" @click="Unstage"
+      >取消编辑</el-button
+    >
+  </div>
+  <div class="EditorAreaBox">
+    <aside
+      :class="{
+        cagAside: !isChange,
+        opAside: isChange,
+      }"
+    >
+      <el-input v-model="editorData.title" placeholder="请输入">
+        <template #prepend>标题：</template>
+      </el-input>
+      <el-input v-model="editorData.lable" placeholder="请输入">
+        <template #prepend>标签：</template>
+      </el-input>
+      <el-input v-model="editorData.describes" placeholder="请输入">
+        <template #prepend>描述:</template>
+      </el-input>
+      <el-input v-model="editorData.keyword" placeholder="请输入">
+        <template #prepend>关键词:</template>
+      </el-input>
+      <el-input v-model="editorData.cover_img" placeholder="请输入">
+        <template #prepend>封面：</template>
+      </el-input>
+      <el-input v-model="editorData.cover_img">
+        <template #prepend
+          >预览:
+          <img :src="editorData.cover_img" alt="文章封面" class="pvimg" />
+        </template>
+      </el-input>
+      <p>变更任何人的文章都需要变更缘由：</p>
+      <el-input v-model="reason" placeholder="输入缘由，不能为空" clearable />
+      <p>
+        ⚠：没有内容？请输入对应文章ID进行编辑，后台管理面板不支持发布文章，需要登录前台站点后台发布新文章
+      </p>
+    </aside>
+    <div id="EditorArea">
+      <Cekditor
+        v-if="!isMd"
+        :content="editorData.content"
+        v-highlight
+        @cagEditorData="cagEditorData"
+      ></Cekditor>
+      <MdEditor
+        v-if="isMd && isShow"
+        :type="'cag'"
+        :content="editorData.content"
+        @cagEditorData="cagEditorData"
+      >
+      </MdEditor>
+    </div>
+  </div>
+</template>
 <style scoped>
 .HeaderBox {
   display: flex;
@@ -224,7 +271,7 @@ onBeforeUnmount(async () => {
   flex-wrap: wrap;
   padding: 8px 20px;
 
-  >.HeaderItem:nth-child(1) {
+  > .HeaderItem:nth-child(1) {
     width: 200px;
   }
 }
@@ -242,7 +289,6 @@ onBeforeUnmount(async () => {
   justify-content: space-between;
   align-items: flex-start;
 }
-
 
 @media only screen and (min-width: 755px) {
   .EditorAreaBox {
@@ -276,7 +322,7 @@ onBeforeUnmount(async () => {
     flex-wrap: wrap;
   }
 
-  .HeaderBox>button {
+  .HeaderBox > button {
     margin-bottom: 10px;
   }
 
@@ -291,7 +337,6 @@ onBeforeUnmount(async () => {
     transition: transform 0.5s;
     transform-origin: top center;
   }
-
 }
 
 .opAside {

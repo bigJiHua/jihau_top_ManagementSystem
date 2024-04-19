@@ -156,11 +156,11 @@ const registerDay = computed(() => {
   max-width: 100px;
 }
 
-/deep/.el-descriptions__header {
+:deep(.el-descriptions__header) {
   margin: 0;
 }
 
-/deep/.el-descriptions__cell {
+:deep(.el-descriptions__cell) {
   width: 120px;
   max-width: 200px;
 }

@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { ref, type Ref } from 'vue'
 
 export const useArticleDataStore = defineStore('ADstore', {
   state: () => ({

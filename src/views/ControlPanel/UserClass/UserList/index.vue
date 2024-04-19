@@ -68,10 +68,10 @@ const getData = (val: number) => {
   padding: 10px 0;
 }
 
-/deep/.el-table__cell {
+:deep(.el-table__cell) {
   text-align: center;
 }
-/deep/.el-tabs__header {
+:deep(.el-tabs__header) {
   margin: 0;
 }
 </style>

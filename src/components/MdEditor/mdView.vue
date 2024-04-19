@@ -6,8 +6,9 @@ import gemoji from '@bytemd/plugin-gemoji'
 import breaks from '@bytemd/plugin-breaks'
 import footnotes from '@bytemd/plugin-footnotes'
 import mediumZoom from '@bytemd/plugin-medium-zoom'
+// @ts-ignore
 import { Viewer } from '@bytemd/vue-next'
-import zhHans from "bytemd/locales/zh_Hans.json"
+import zhHans from 'bytemd/locales/zh_Hans.json'
 import 'juejin-markdown-themes/dist/simplicity-green.min.css'
 import 'highlight.js/styles/monokai-sublime.css'
 import 'bytemd/dist/index.css'
@@ -21,12 +22,19 @@ const plugins = ref([
   frontmatter(),
   breaks(),
   footnotes(),
-  mediumZoom()
+  mediumZoom(),
 ])
 </script>
 
 <template>
-  <Viewer class="viewer markdown-body" :tabindex="2" :sanitize="23" :value="data" :plugins="plugins" :locale="zhHans">
+  <Viewer
+    class="viewer markdown-body"
+    :tabindex="2"
+    :sanitize="23"
+    :value="data"
+    :plugins="plugins"
+    :locale="zhHans"
+  >
   </Viewer>
 </template>
 

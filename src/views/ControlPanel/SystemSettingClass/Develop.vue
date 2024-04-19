@@ -1,54 +1,46 @@
 <template>
   <div class="UserList">
     <div class="UserItem">
-      <el-descriptions class="margin-top" title="新建好友" :column="2" border>
+      <el-descriptions class="margin-top" title="添加发展历程" :column="2" border>
         <template #extra>
           <el-button type="success" plain @click="AddUserData()">添加</el-button>
         </template>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              用户名
+              标题
             </div>
           </template>
-          <el-input v-model="newDevP.set_title" placeholder="输入用户名" />
+          <el-input v-model="newDevP.set_title" placeholder="输入标题" />
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              金额
+              历程时间
             </div>
           </template>
-          <el-input v-model="newDevP.set_difault01" placeholder="输入赞助金额" type="number" />
+          <el-date-picker v-model="newDevP.set_change" type="date" />
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              认识时间
+              链接
             </div>
           </template>
-          <el-date-picker v-model="newDevP.set_time" type="date" />
+          <el-input v-model="newDevP.set_url" placeholder="输入链接" />
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              友链
+              默认文字
             </div>
           </template>
-          <el-input v-model="newDevP.set_url" placeholder="输入友链" />
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template #label>
-            <div class="cell-item">
-              头像
-            </div>
-          </template>
-          <el-input v-model="newDevP.set_difault" placeholder="输入好友头像" />
+          <el-input v-model="newDevP.set_difault" placeholder="默认文字" />
         </el-descriptions-item>
       </el-descriptions>
     </div>
-    <div class="UserItem" v-for="item in DevP" :key="item">
-      <el-descriptions class="margin-top" title="好友" :column="2" border>
+    <div class="UserItem" v-for="(item, index) in DevP" :key="index">
+      <el-descriptions class="margin-top" :title="`发展历程${index + 1}`" :column="2" border>
         <template #extra>
           <el-button type="primary" @click="ChangeData(item)">编辑</el-button>
           <el-button type="danger" :icon="Delete" circle @click="DeleteUser(item)" />
@@ -56,31 +48,23 @@
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              用户名
+              标题
             </div>
           </template>
-          {{ item.set_title }}
+          <span style="font-size: 10px;">{{ item.set_title }}</span>
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              金额
+              历程时间
             </div>
           </template>
-          <el-tag size="small">{{ item.set_difault01 > 0 ? item.set_difault01 : '无赞助' }}</el-tag>
+          {{ item.set_change }}
         </el-descriptions-item>
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              认识时间
-            </div>
-          </template>
-          {{ item.set_time }}
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template #label>
-            <div class="cell-item">
-              友链
+              链接
             </div>
           </template>
           {{ item.set_url }}
@@ -88,7 +72,7 @@
         <el-descriptions-item>
           <template #label>
             <div class="cell-item">
-              头像
+              默认文字
             </div>
           </template>
           {{ item.set_difault }}
@@ -99,19 +83,16 @@
   <el-drawer v-model="isDrawer" :with-header="false">
     <div class="ChangeFrom">
       <el-form label-width="100px" :model="ChangeData" style="max-width: 460px">
-        <el-form-item label="用户名">
+        <el-form-item label="标题">
           <el-input v-model="ChangeDevpP.set_title" />
         </el-form-item>
-        <el-form-item label="金额">
-          <el-input v-model="ChangeDevpP.set_difault01" type="number" />
+        <el-form-item label="历程时间">
+          <el-date-picker v-model="ChangeDevpP.set_change" type="date" />
         </el-form-item>
-        <el-form-item label="认识时间">
-          <el-date-picker v-model="ChangeDevpP.set_time" type="date" />
-        </el-form-item>
-        <el-form-item label="友链">
+        <el-form-item label="链接">
           <el-input v-model="ChangeDevpP.set_url" />
         </el-form-item>
-        <el-form-item label="头像">
+        <el-form-item label="默认文字">
           <el-input v-model="ChangeDevpP.set_difault" />
         </el-form-item>
       </el-form>
@@ -131,7 +112,7 @@ import { Delete } from '@element-plus/icons-vue'
 import { ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 const newDevP = ref({
-  set_name: 'PriceUser',
+  set_name: 'DevP',
   set_title: '',
   set_url: '',
   set_difault: '',
@@ -141,7 +122,7 @@ const newDevP = ref({
 }) as any
 const ChangeDevpP = ref({
   id: '',
-  set_name: 'PriceUser',
+  set_name: 'DevP',
   set_title: '',
   set_url: '',
   set_difault: '',
@@ -152,7 +133,7 @@ const ChangeDevpP = ref({
 const isDrawer = ref(false)
 const DevP = ref<any>([])
 const getUserList = async () => {
-  const { data: res } = await getSpsList.getSpsList('get')
+  const { data: res } = await getSpsList.getDevP('get')
   DevP.value = res.data
 }
 const ChangeData = async (item: any) => {
@@ -160,10 +141,10 @@ const ChangeData = async (item: any) => {
   isDrawer.value = true
 }
 const ChangeUserList = async () => {
-  if (await useELTips('你确定要修改当前好友信息吗？')) {
-    ChangeDevpP.value.set_time = dayjs(ChangeDevpP.value.set_time).format('YYYY-MM-DD')
+  if (await useELTips('你确定要修改当前历程信息吗？')) {
+    ChangeDevpP.value.set_change = dayjs(ChangeDevpP.value.set_change).format('YYYY-MM-DD')
     console.log(ChangeDevpP.value);
-    const { data: res } = await getSpsList.getSpsList('cag', JSON.stringify(ChangeDevpP.value))
+    const { data: res } = await getSpsList.getDevP('cag', JSON.stringify(ChangeDevpP.value))
     if (res.status === 200) {
       isDrawer.value = false
       getUserList()
@@ -171,8 +152,8 @@ const ChangeUserList = async () => {
   }
 }
 const DeleteUser = async (item: any) => {
-  if (await useELTips('你确定要删除当前好友信息吗？')) {
-    const { data: res } = await getSpsList.getSpsList('del', JSON.stringify(item))
+  if (await useELTips('你确定要删除该历程吗？')) {
+    const { data: res } = await getSpsList.getDevP('del', JSON.stringify(item))
     if (res.status === 200) {
       getUserList()
     }
@@ -189,8 +170,8 @@ const AddUserData = async () => {
       return
     }
   }
-  newDevP.value.set_time = dayjs(newDevP.value.set_time).format('YYYY-MM-DD')
-  if (await useELTips('你确定要添加当前好友信息吗？')) {
+  newDevP.value.set_change = dayjs(newDevP.value.set_change).format('YYYY-MM-DD')
+  if (await useELTips('你确定要添加当前历程信息吗？')) {
     const { data: res } = await getSpsList.getSpsList('add', JSON.stringify(newDevP.value))
     if (res.status === 200) {
       getUserList()
@@ -201,6 +182,7 @@ const AddUserData = async () => {
       newDevP.value.set_difault01 = ''
       newDevP.value.set_change = ''
       newDevP.value.set_time = ''
+      newDevP.value.set_change = ''
     }
   }
 }
